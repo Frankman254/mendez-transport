@@ -136,22 +136,22 @@ function Navbar() {
       initial={{ y: -80 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? 'bg-brand-black/95 backdrop-blur-md shadow-2xl border-b border-brand-red/20'
-          : 'bg-transparent'
-      }`}
+      className="fixed top-3 left-0 right-0 z-50 px-3 transition-all duration-300"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        <MendezLogo size={36} showText={true} dark={false} />
+      <div className={`mx-auto flex h-14 max-w-6xl items-center justify-between rounded-full border px-4 sm:px-6 lg:px-8 ${
+        scrolled
+          ? 'border-white/10 bg-brand-black/82 backdrop-blur-md shadow-2xl'
+          : 'border-white/10 bg-brand-black/30 backdrop-blur-md'
+      }`}>
+        <MendezLogo size={28} showText={true} dark={false} />
 
         {/* Desktop nav */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden md:flex items-center gap-6">
           {links.map(link => (
             <a
               key={link.href}
               href={link.href}
-              className="text-gray-300 hover:text-white text-sm font-medium tracking-wide transition-colors duration-200 relative group"
+              className="text-gray-300/85 hover:text-white text-xs font-medium tracking-[0.18em] uppercase transition-colors duration-200 relative group"
             >
               {link.label}
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-red group-hover:w-full transition-all duration-300" />
@@ -161,7 +161,7 @@ function Navbar() {
             href="https://wa.me/50769255088"
             target="_blank"
             rel="noopener noreferrer"
-            className="btn-whatsapp !py-2 !px-5 text-sm"
+            className="btn-whatsapp !py-2 !px-4 !text-xs"
           >
             <WhatsAppIcon size={16} />
             Book Now
@@ -652,7 +652,7 @@ function BusinessCardSection() {
                 className="rounded-2xl overflow-hidden shadow-2xl cursor-pointer"
               >
                 <img
-                  src="/assets/ChatGPT Image 23 mar 2026, 22_29_35.png"
+                  src="/assets/bannersGPT/tarjeta.png"
                   alt="Méndez Transport Business Cards"
                   className="w-full object-cover"
                 />
