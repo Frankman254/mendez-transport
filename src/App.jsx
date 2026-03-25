@@ -22,13 +22,15 @@ import {
 	Wifi,
 	Award,
 	FileDown,
+	Lock,
 } from 'lucide-react';
 import Flyer from './components/Flyer';
 import PrintBanner from './components/PrintBanner';
-import ShuttleBanner from './components/ShuttleBanner';
+import ShuttleBanner, { PRIVATE_CARD_IMAGE } from './components/ShuttleBanner';
 import VerticalBannerPreview from './components/VerticalBannerPreview';
 import BannerAssetPreview from './components/BannerAssetPreview';
 import BannersTabbedPage from './components/BannersTabbedPage';
+import AssetsPortal from './components/AssetsPortal';
 import { bannerConfigByRoute, bannerConfigs } from './components/bannerConfigs';
 
 // ─── Logo SVG Component ─────────────────────────────────────────────────────
@@ -126,15 +128,6 @@ function WhatsAppIcon({ size = 24 }) {
 }
 
 // ─── QR Code with WhatsApp Icon ───────────────────────────────────────────────
-function escapeHtml(value) {
-	return value
-		.replaceAll('&', '&amp;')
-		.replaceAll('<', '&lt;')
-		.replaceAll('>', '&gt;')
-		.replaceAll('"', '&quot;')
-		.replaceAll("'", '&#39;');
-}
-
 function WhatsAppQR({
 	url,
 	size = 200,
@@ -149,125 +142,43 @@ function WhatsAppQR({
     </svg>
   `)}`;
 
-	const handleExportPdf = () => {
+	const handleExportPng = () => {
 		const svg = qrRef.current?.querySelector('svg');
 		if (!svg) return;
-
-		const printWindow = window.open(
-			'',
-			'_blank',
-			'noopener,noreferrer,width=900,height=1100'
-		);
-		if (!printWindow) return;
-
 		const qrMarkup = new XMLSerializer().serializeToString(svg);
-		const safeTitle = escapeHtml(pdfTitle);
-		const safeLabel = escapeHtml(label || 'Scan to open WhatsApp');
+		const svgBlob = new Blob([qrMarkup], {
+			type: 'image/svg+xml;charset=utf-8',
+		});
+		const objectUrl = URL.createObjectURL(svgBlob);
+		const image = new Image();
+		const exportSize = Math.max(size, 512);
 
-		printWindow.document.write(`
-      <!doctype html>
-      <html lang="en">
-        <head>
-          <meta charset="utf-8" />
-          <title>${safeTitle}</title>
-          <style>
-            * { box-sizing: border-box; }
-            body {
-              margin: 0;
-              min-height: 100vh;
-              display: grid;
-              place-items: center;
-              background: #eef2f1;
-              font-family: Arial, sans-serif;
-              color: #111827;
-            }
-            .sheet {
-              width: 8.5in;
-              min-height: 11in;
-              padding: 0.8in;
-              background: white;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-            }
-            .card {
-              width: 100%;
-              max-width: 4.8in;
-              border: 2px solid #111827;
-              border-radius: 24px;
-              padding: 28px;
-              text-align: center;
-              box-shadow: 0 20px 50px rgba(0,0,0,0.08);
-            }
-            .brand {
-              font-size: 12px;
-              letter-spacing: 0.4em;
-              color: #dc2626;
-              font-weight: 700;
-              text-transform: uppercase;
-            }
-            h1 {
-              margin: 8px 0 8px;
-              font-size: 30px;
-              line-height: 1.05;
-            }
-            p {
-              margin: 0;
-              color: #4b5563;
-              font-size: 14px;
-            }
-            .qr {
-              margin: 24px auto;
-              width: fit-content;
-              padding: 16px;
-              border-radius: 24px;
-              background: white;
-              box-shadow: 0 12px 28px rgba(37, 211, 102, 0.18);
-            }
-            .phones {
-              margin-top: 18px;
-              font-size: 18px;
-              font-weight: 700;
-              line-height: 1.7;
-              color: #111827;
-            }
-            @media print {
-              body { background: white; }
-              .sheet {
-                width: auto;
-                min-height: auto;
-                padding: 0;
-              }
-              .card {
-                box-shadow: none;
-                break-inside: avoid;
-              }
-            }
-          </style>
-        </head>
-        <body>
-          <div class="sheet">
-            <div class="card">
-              <div class="brand">Transport</div>
-              <h1>${safeTitle}</h1>
-              <p>${safeLabel}</p>
-              <div class="qr">${qrMarkup}</div>
-              <div class="phones">+507 69255088<br/>+507 68768467</div>
-            </div>
-          </div>
-          <script>
-            window.onload = () => {
-              setTimeout(() => {
-                window.focus();
-                window.print();
-              }, 250);
-            };
-            window.onafterprint = () => window.close();
-          </script>
-        </body>
-      </html>
-    `);
-		printWindow.document.close();
+		image.onload = () => {
+			const canvas = document.createElement('canvas');
+			canvas.width = exportSize;
+			canvas.height = exportSize;
+			const ctx = canvas.getContext('2d');
+			if (!ctx) {
+				URL.revokeObjectURL(objectUrl);
+				return;
+			}
+
+			ctx.fillStyle = '#ffffff';
+			ctx.fillRect(0, 0, canvas.width, canvas.height);
+			ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+			const link = document.createElement('a');
+			link.href = canvas.toDataURL('image/png');
+			link.download = `${pdfTitle.replaceAll(' ', '-').toLowerCase()}-qr.png`;
+			link.click();
+			URL.revokeObjectURL(objectUrl);
+		};
+
+		image.onerror = () => {
+			URL.revokeObjectURL(objectUrl);
+		};
+
+		image.src = objectUrl;
 	};
 
 	return (
@@ -297,11 +208,11 @@ function WhatsAppQR({
 			{showExportButton && (
 				<button
 					type="button"
-					onClick={handleExportPdf}
+					onClick={handleExportPng}
 					className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/16"
 				>
 					<FileDown size={16} />
-					Export QR PDF
+					Export QR PNG
 				</button>
 			)}
 		</div>
@@ -389,6 +300,12 @@ function Navbar() {
 						<WhatsAppIcon size={16} />
 						Book Now
 					</a>
+					<a
+						href="/mis-assets"
+						className="flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-semibold text-gray-300 hover:text-white hover:bg-white/10 transition-colors"
+					>
+						Mis Assets
+					</a>
 				</div>
 
 				{/* Mobile hamburger */}
@@ -439,7 +356,11 @@ function Navbar() {
 }
 
 // ─── HERO ─────────────────────────────────────────────────────────────────────
-function Hero() {
+function Hero({ paidView = false }) {
+	if (paidView) {
+		return <ShuttleBanner imageSrc={PRIVATE_CARD_IMAGE} />;
+	}
+
 	return <ShuttleBanner />;
 }
 
@@ -519,21 +440,21 @@ function FeaturedDestinations() {
 			name: 'Bocas del Toro',
 			tagline: 'Turquoise waters & island paradise',
 			price: '$65',
-			image: '/assets/wallpaperflare.com_wallpaper (1).jpg',
+			image: '/assets/Bocas-del-toro-1.jpg',
 			badge: 'Most Popular',
 		},
 		{
-			name: 'Boquete',
-			tagline: 'Cloud forests & coffee highlands',
-			price: '$35',
-			image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80',
+			name: 'El Valle de Antón',
+			tagline: 'Volcanic crater, waterfalls & nature',
+			price: '$40',
+			image: '/assets/tips-valle-de-anton-panama.jpg',
 			badge: 'Nature Escape',
 		},
 		{
 			name: 'Panama City',
 			tagline: 'Skyline, canal & urban culture',
 			price: '$55',
-			image: 'https://images.unsplash.com/photo-1591604466107-ec97de577aff?w=800&q=80',
+			image: '/assets/Panama-City.jpg',
 			badge: 'City Vibes',
 		},
 	];
@@ -777,7 +698,7 @@ function VehicleShowcase() {
 							{/* Main van image */}
 							<div className="relative rounded-3xl overflow-hidden shadow-2xl">
 								<img
-									src="/assets/e237ef51-f38b-4682-9997-9b0fa5de9254.jpg"
+									src="/assets/carro.png"
 									alt="Méndez Transport Toyota HiAce"
 									className="w-full object-cover h-72"
 								/>
@@ -837,7 +758,7 @@ function BannerSection() {
 			{/* Background Bocas image */}
 			<div className="absolute inset-0">
 				<img
-					src="/assets/wallpaperflare.com_wallpaper.jpg"
+					src="/assets/Bocas-del-toro-3.jpg"
 					alt=""
 					className="w-full h-full object-cover opacity-10"
 				/>
@@ -885,14 +806,14 @@ function BannerSection() {
 						</div>
 					</FadeIn>
 
-					{/* Right - Banner image */}
+					{/* Right - Logo mascot */}
 					<FadeIn direction="right">
-						<div className="relative mx-auto max-w-xs">
+						<div className="relative mx-auto max-w-xs flex items-center justify-center">
 							<div className="absolute inset-0 bg-brand-red/20 blur-3xl rounded-full" />
 							<img
-								src="/assets/Banner_melendez_transport.png"
-								alt="Méndez Transport Banner"
-								className="relative w-full rounded-3xl shadow-2xl border border-white/10"
+								src="/assets/mascotas.png"
+								alt="Méndez Transport"
+								className="relative w-full drop-shadow-2xl"
 							/>
 						</div>
 					</FadeIn>
@@ -903,7 +824,14 @@ function BannerSection() {
 }
 
 // ─── BUSINESS CARD SECTION ────────────────────────────────────────────────────
-function BusinessCardSection() {
+function BusinessCardSection({ paidView = false }) {
+	const firstPreviewImage = paidView
+		? '/assets/mis-assets/Tarjeta_4k.png'
+		: '/assets/Panama-City.jpg';
+	const secondPreviewImage = paidView
+		? '/assets/mis-assets/Banner_oscuro_4k.png'
+		: '/assets/tips-valle-de-anton-panama.jpg';
+
 	return (
 		<section className="py-20 bg-gray-50">
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -930,8 +858,8 @@ function BusinessCardSection() {
 								className="rounded-2xl overflow-hidden shadow-2xl cursor-pointer"
 							>
 								<img
-									src="/assets/ChatGPT Image 23 mar 2026, 22_30_46.png"
-									alt="Méndez Transport Business Card Front"
+									src={firstPreviewImage}
+									alt="Méndez Transport preview"
 									className="w-full object-cover"
 								/>
 							</motion.div>
@@ -941,8 +869,8 @@ function BusinessCardSection() {
 								className="rounded-2xl overflow-hidden shadow-2xl cursor-pointer"
 							>
 								<img
-									src="/assets/bannersGPT/tarjeta.png"
-									alt="Méndez Transport Business Cards"
+									src={secondPreviewImage}
+									alt="Méndez Transport preview"
 									className="w-full object-cover"
 								/>
 							</motion.div>
@@ -1016,6 +944,80 @@ function BusinessCardSection() {
 				</div>
 			</div>
 		</section>
+	);
+}
+
+function LandingPage({ paidView = false }) {
+	return (
+		<div className="min-h-screen">
+			<Navbar />
+			<Hero paidView={paidView} />
+			<Benefits />
+			<FeaturedDestinations />
+			<PricesSection />
+			<VehicleShowcase />
+			<BannerSection />
+			<BusinessCardSection paidView={paidView} />
+			<ContactSection />
+			<Footer />
+		</div>
+	);
+}
+
+function PaidViewLogin({ onSuccess }) {
+	const [password, setPassword] = useState('');
+	const [error, setError] = useState(false);
+	const ACCESS_PASSWORD = 'mendez507';
+
+	const handleSubmit = (event) => {
+		event.preventDefault();
+		if (password === ACCESS_PASSWORD) {
+			window.sessionStorage.setItem('paid_view_access', 'granted');
+			onSuccess();
+			return;
+		}
+		setError(true);
+	};
+
+	return (
+		<div className="min-h-screen bg-brand-black flex items-center justify-center px-4">
+			<div className="w-full max-w-sm rounded-3xl border border-white/10 bg-white/5 p-8 text-center shadow-2xl backdrop-blur-sm">
+				<h1 className="font-display text-3xl text-white mb-1">
+					Vista Pagada
+				</h1>
+				<p className="text-gray-400 text-sm mb-6">
+					Ingresa la contraseña para continuar.
+				</p>
+				<form onSubmit={handleSubmit} className="space-y-3">
+					<input
+						type="password"
+						value={password}
+						onChange={(event) => {
+							setPassword(event.target.value);
+							if (error) setError(false);
+						}}
+						placeholder="Contraseña"
+						autoFocus
+						className={`w-full rounded-xl border px-4 py-3 text-center text-white bg-white/8 outline-none transition-colors text-sm font-medium tracking-widest ${
+							error
+								? 'border-red-500 bg-red-500/10'
+								: 'border-white/15 focus:border-brand-red/60 focus:bg-white/10'
+						}`}
+					/>
+					{error && (
+						<p className="text-xs text-red-400 font-semibold">
+							Contraseña incorrecta.
+						</p>
+					)}
+					<button
+						type="submit"
+						className="w-full rounded-xl bg-brand-red hover:bg-brand-red-dark text-white font-bold py-3 transition-colors"
+					>
+						Entrar
+					</button>
+				</form>
+			</div>
+		</div>
 	);
 }
 
@@ -1124,8 +1126,6 @@ function ContactSection() {
 
 // ─── FOOTER ───────────────────────────────────────────────────────────────────
 function Footer() {
-	const featuredBannerLinks = bannerConfigs;
-
 	return (
 		<footer className="bg-[#0d0d0d] border-t border-white/5 py-10">
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1170,57 +1170,6 @@ function Footer() {
 					</div>
 				</div>
 
-				<div className="mt-8 rounded-[2rem] border border-white/8 bg-white/[0.03] p-5 sm:p-6">
-					<div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-						<div>
-							<p className="text-xs font-bold uppercase tracking-[0.28em] text-brand-red">
-								Footer Banners
-							</p>
-							<h3 className="mt-2 text-lg font-black text-white">
-								Abre cualquier banner o tarjeta
-							</h3>
-						</div>
-						<div className="flex flex-wrap gap-3">
-							<a
-								href="/"
-								className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/10"
-							>
-								Inicio
-							</a>
-							<a
-								href="/banners"
-								className="rounded-full border border-[#25D366]/30 bg-[#25D366]/10 px-4 py-2 text-sm font-semibold text-[#a9f0c1] transition-colors hover:bg-[#25D366]/16"
-							>
-								Ver todos
-							</a>
-						</div>
-					</div>
-
-					<div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-						{featuredBannerLinks.map(config => (
-							<a
-								key={config.slug}
-								href={config.route}
-								className="group overflow-hidden rounded-2xl border border-white/10 bg-black/20 transition-transform hover:-translate-y-1"
-							>
-								<div className="relative aspect-[4/5] overflow-hidden">
-									<img
-										src={config.image}
-										alt={config.title}
-										className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-									/>
-									<div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/18 to-transparent" />
-									<div className="absolute inset-x-0 bottom-0 p-3">
-										<p className="text-xs font-semibold uppercase tracking-[0.12em] text-white/90">
-											{config.title}
-										</p>
-									</div>
-								</div>
-							</a>
-						))}
-					</div>
-				</div>
-
 				<div className="mt-8 pt-6 border-t border-white/5 text-center text-gray-700 text-xs">
 					© {new Date().getFullYear()} Méndez Transport · Panama · All
 					rights reserved
@@ -1232,6 +1181,9 @@ function Footer() {
 
 // ─── APP MAIN ─────────────────────────────────────────────────────────────────
 export default function App() {
+	const [paidViewAuthenticated, setPaidViewAuthenticated] = useState(() =>
+		window.sessionStorage.getItem('paid_view_access') === 'granted'
+	);
 	const bannerPreview = bannerConfigByRoute[window.location.pathname];
 	if (bannerPreview) {
 		return <BannerAssetPreview config={bannerPreview} />;
@@ -1242,7 +1194,7 @@ export default function App() {
 	}
 
 	if (window.location.pathname === '/tarjeta-4k') {
-		return <ShuttleBanner standalone />;
+		return <ShuttleBanner standalone imageSrc={PRIVATE_CARD_IMAGE} />;
 	}
 
 	if (window.location.pathname === '/banner-vertical') {
@@ -1258,18 +1210,24 @@ export default function App() {
 		return <PrintBanner />;
 	}
 
-	return (
-		<div className="min-h-screen">
-			<Navbar />
-			<Hero />
-			<Benefits />
-			<FeaturedDestinations />
-			<PricesSection />
-			<VehicleShowcase />
-			<BannerSection />
-			<BusinessCardSection />
-			<ContactSection />
-			<Footer />
-		</div>
-	);
+	if (window.location.pathname === '/mis-assets') {
+		return <AssetsPortal />;
+	}
+
+	if (window.location.pathname === '/vista-pagada') {
+		if (!paidViewAuthenticated) {
+			return (
+				<PaidViewLogin
+					onSuccess={() => setPaidViewAuthenticated(true)}
+				/>
+			);
+		}
+		return <LandingPage paidView={true} />;
+	}
+
+	if (window.location.pathname === '/vista-muestra') {
+		return <LandingPage paidView={false} />;
+	}
+
+	return <LandingPage paidView={false} />;
 }

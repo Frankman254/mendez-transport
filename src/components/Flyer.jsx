@@ -116,17 +116,17 @@ const DESTINATIONS = [
 const FEATURED = [
   {
     name: 'Bocas del Toro',
-    img: '/assets/wallpaperflare.com_wallpaper (1).jpg',
+    img: '/assets/Bocas-del-toro-1.jpg',
     pos: 'center',
   },
   {
     name: 'El Valle de Antón',
-    img: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=400&q=85',
+    img: '/assets/tips-valle-de-anton-panama.jpg',
     pos: 'center',
   },
   {
     name: 'Panama City',
-    img: 'https://images.unsplash.com/photo-1605640840605-14ac1855827b?w=400&q=85',
+    img: '/assets/Panama-City.jpg',
     pos: 'center bottom',
   },
 ]
@@ -169,7 +169,7 @@ export default function Flyer() {
         {/* Layer 1: tropical base image */}
         <div style={{ position: 'absolute', inset: 0 }}>
           <img
-            src="/assets/wallpaperflare.com_wallpaper (2).jpg"
+            src="/assets/Bocas-del-toro-2.jpg"
             alt=""
             style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }}
           />
@@ -350,7 +350,7 @@ export default function Flyer() {
               bottom: 10,
             }} />
             <img
-              src="/assets/e237ef51-f38b-4682-9997-9b0fa5de9254.jpg"
+              src="/assets/busito png.png"
               alt="Méndez Transport Toyota HiAce Turismo"
               style={{
                 height: 190,

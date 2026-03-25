@@ -119,15 +119,15 @@ const destinations = [
 const featured = [
   {
     name:  'Bocas del Toro',
-    image: '/assets/wallpaperflare.com_wallpaper.jpg',
+    image: '/assets/Bocas-del-toro-3.jpg',
   },
   {
     name:  'El Valle de Antón',
-    image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=85',
+    image: '/assets/tips-valle-de-anton-panama.jpg',
   },
   {
     name:  'Panama City',
-    image: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=900&q=85',
+    image: '/assets/Panama-City.jpg',
   },
 ]
 
@@ -147,7 +147,7 @@ export default function PrintBanner() {
         {/* Capa 1 — imagen tropical local */}
         <div
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('/assets/wallpaperflare.com_wallpaper (1).jpg')" }}
+          style={{ backgroundImage: "url('/assets/Bocas-del-toro-1.jpg')" }}
         />
 
         {/* Capa 2 — overlay oscuro general */}
@@ -397,7 +397,7 @@ export default function PrintBanner() {
               }}
             >
               <img
-                src="/assets/e237ef51-f38b-4682-9997-9b0fa5de9254.jpg"
+                src="/assets/busito png.png"
                 alt="Méndez Transport shuttle"
                 style={{
                   position: 'absolute',
