@@ -484,7 +484,7 @@ function Hero({ paidView = false, t }) {
 			<section className="relative overflow-hidden bg-[#f4ecdf] pt-24 sm:pt-28">
 				<div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(184,94,52,0.10),transparent_28%),linear-gradient(180deg,#f4ecdf_0%,#fbf7f1_100%)]" />
 				<div className="relative mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8 lg:pb-24">
-					<div className="grid items-center gap-10 lg:grid-cols-[0.9fr_1.1fr]">
+					<div className="grid gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-start">
 						<FadeIn className="max-w-xl">
 							<div className="inline-flex items-center gap-2 rounded-full border border-[#d5c4b5] bg-white/70 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-[#8b5e3c]">
 								<Compass size={14} />
@@ -515,20 +515,20 @@ function Hero({ paidView = false, t }) {
 						</FadeIn>
 
 						<FadeIn direction="right">
-							<div className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
-								<div className="overflow-hidden rounded-[2rem] border border-[#e7d8c8] bg-white p-4 shadow-[0_28px_80px_rgba(45,35,18,0.12)]">
+							<div className="grid gap-5 xl:grid-cols-[minmax(0,1.05fr)_320px] items-start">
+								<div className="self-start overflow-hidden rounded-[2rem] border border-[#e7d8c8] bg-white p-4 shadow-[0_28px_80px_rgba(45,35,18,0.12)]">
 									<img
 										src={PRIVATE_CARD_IMAGE}
 										alt="Vista pagada de los assets de Méndez Transport"
-										className="w-full rounded-[1.4rem] object-cover"
+										className="h-auto w-full rounded-[1.4rem] object-contain"
 									/>
 								</div>
-								<div className="space-y-5">
+								<div className="space-y-5 self-start">
 									<div className="overflow-hidden rounded-[2rem] border border-[#e7d8c8] bg-white p-4 shadow-[0_22px_60px_rgba(45,35,18,0.10)]">
 										<img
 											src="/assets/mis-assets/Banner_oscuro_4k.png"
 											alt="Banner premium de Méndez Transport"
-											className="w-full rounded-[1.4rem] object-cover"
+											className="h-auto w-full rounded-[1.4rem] object-contain"
 										/>
 									</div>
 									<div className="rounded-[2rem] border border-[#e7d8c8] bg-[#fcf8f1] p-6">
@@ -622,7 +622,6 @@ function FeaturedDestinations({ t }) {
 			price: '$65',
 			image: '/assets/Bocas-del-toro-3.jpg',
 			badge: t.destinations.items[0].badge,
-			layout: 'tall',
 		},
 		{
 			name: t.destinations.items[1].name,
@@ -630,7 +629,6 @@ function FeaturedDestinations({ t }) {
 			price: '$40',
 			image: '/assets/tips-valle-de-anton-panama.jpg',
 			badge: t.destinations.items[1].badge,
-			layout: 'compact',
 		},
 		{
 			name: t.destinations.items[2].name,
@@ -638,7 +636,6 @@ function FeaturedDestinations({ t }) {
 			price: '$55',
 			image: '/assets/Panama-City-11.jpg',
 			badge: t.destinations.items[2].badge,
-			layout: 'wide',
 		},
 		{
 			name: t.destinations.items[3].name,
@@ -646,9 +643,10 @@ function FeaturedDestinations({ t }) {
 			price: '$40',
 			image: '/assets/Bocas-del-toro-1.jpg',
 			badge: t.destinations.items[3].badge,
-			layout: 'compact',
 		},
 	];
+
+	const [heroDestination, ...secondaryDestinations] = featured;
 
 	return (
 		<section id="destinations" className="bg-[#f4ecdf] py-20">
@@ -659,56 +657,84 @@ function FeaturedDestinations({ t }) {
 					<p className="mx-auto mt-4 max-w-2xl text-lg leading-8 text-[#66726e]">{t.destinations.subtitle}</p>
 				</FadeIn>
 
-				<div className="grid gap-6 lg:grid-cols-12 lg:grid-rows-[320px_280px]">
-					{featured.map((dest, i) => (
-						<FadeIn key={dest.name} delay={i * 0.15}>
-							<a
-								href="https://wa.me/50769255088"
-								target="_blank"
-								rel="noopener noreferrer"
-								className={`dest-card group relative block overflow-hidden rounded-[2rem] cursor-pointer ${
-									dest.layout === 'tall'
-										? 'h-[520px] lg:col-span-5 lg:row-span-2 lg:h-full'
-										: dest.layout === 'wide'
-											? 'h-[300px] lg:col-span-7 lg:h-full'
-											: 'h-[260px] lg:col-span-3 lg:h-full'
-								}`}
-							>
-								<img
-									src={dest.image}
-									alt={dest.name}
-									className="w-full h-full object-cover"
-								/>
-								{/* Badge */}
-								<div className="absolute top-5 left-5 z-10 bg-brand-red text-white text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-full">
-									{dest.badge}
+				<div className="grid gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-start">
+					<FadeIn>
+						<a
+							href="https://wa.me/50769255088"
+							target="_blank"
+							rel="noopener noreferrer"
+							className="dest-card group relative block h-[520px] overflow-hidden rounded-[2.2rem] cursor-pointer"
+						>
+							<img
+								src={heroDestination.image}
+								alt={heroDestination.name}
+								className="h-full w-full object-cover"
+							/>
+							<div className="absolute top-6 left-6 z-10 rounded-full bg-brand-red px-3 py-1.5 text-xs font-bold uppercase tracking-widest text-white">
+								{heroDestination.badge}
+							</div>
+							<div className="absolute top-6 right-6 z-10 rounded-full border border-white/30 bg-white/15 px-4 py-2 text-lg font-black text-white backdrop-blur-md">
+								{heroDestination.price}
+							</div>
+							<div className="absolute bottom-0 left-0 right-0 z-10 p-8">
+								<h3 className="mb-3 font-display text-6xl leading-[0.9] text-white text-shadow-lg">
+									{heroDestination.name}
+								</h3>
+								<p className="mb-6 max-w-md text-base leading-7 text-[#efe7df]">
+									{heroDestination.tagline}
+								</p>
+								<div className="flex items-center gap-2 text-sm font-semibold text-white/90 transition-colors group-hover:text-[#f7d7b3]">
+									<MapPin size={16} />
+									{t.destinations.book}
+									<ArrowRight
+										size={14}
+										className="group-hover:translate-x-1 transition-transform"
+									/>
 								</div>
-								{/* Price pill */}
-								<div className="absolute top-5 right-5 z-10 rounded-full border border-white/30 bg-white/15 px-4 py-2 text-lg font-black text-white backdrop-blur-md">
-									{dest.price}
-								</div>
-								{/* Bottom content */}
-								<div className="absolute bottom-0 left-0 right-0 z-10 p-7">
-									<h3 className={`font-display leading-none text-white text-shadow-lg ${
-										dest.layout === 'wide' ? 'mb-2 text-5xl' : 'mb-2 text-4xl'
-									}`}>
-										{dest.name}
-									</h3>
-									<p className={`text-[#efe7df] ${dest.layout === 'compact' ? 'mb-4 text-xs leading-5' : 'mb-5 text-sm leading-6'}`}>
-										{dest.tagline}
-									</p>
-									<div className="flex items-center gap-2 text-sm font-semibold text-white/90 transition-colors group-hover:text-[#f7d7b3]">
-										<MapPin size={16} />
-										{t.destinations.book}
-										<ArrowRight
-											size={14}
-											className="group-hover:translate-x-1 transition-transform"
-										/>
+							</div>
+						</a>
+					</FadeIn>
+
+					<div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-1">
+						{secondaryDestinations.map((dest, i) => (
+							<FadeIn key={dest.name} delay={(i + 1) * 0.12}>
+								<a
+									href="https://wa.me/50769255088"
+									target="_blank"
+									rel="noopener noreferrer"
+									className="dest-card group relative block h-[240px] overflow-hidden rounded-[1.8rem] cursor-pointer"
+								>
+									<img
+										src={dest.image}
+										alt={dest.name}
+										className="h-full w-full object-cover"
+									/>
+									<div className="absolute top-5 left-5 z-10 rounded-full bg-brand-red px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-white">
+										{dest.badge}
 									</div>
-								</div>
-							</a>
-						</FadeIn>
-					))}
+									<div className="absolute top-5 right-5 z-10 rounded-full border border-white/30 bg-white/15 px-4 py-2 text-base font-black text-white backdrop-blur-md">
+										{dest.price}
+									</div>
+									<div className="absolute bottom-0 left-0 right-0 z-10 p-6">
+										<h3 className="mb-2 font-display text-4xl leading-none text-white text-shadow-lg">
+											{dest.name}
+										</h3>
+										<p className="mb-4 max-w-sm text-sm leading-6 text-[#efe7df]">
+											{dest.tagline}
+										</p>
+										<div className="flex items-center gap-2 text-sm font-semibold text-white/90 transition-colors group-hover:text-[#f7d7b3]">
+											<MapPin size={16} />
+											{t.destinations.book}
+											<ArrowRight
+												size={14}
+												className="group-hover:translate-x-1 transition-transform"
+											/>
+										</div>
+									</div>
+								</a>
+							</FadeIn>
+						))}
+					</div>
 				</div>
 			</div>
 		</section>
