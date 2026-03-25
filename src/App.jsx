@@ -23,6 +23,8 @@ import {
 	Award,
 	FileDown,
 	Lock,
+	Sun,
+	Moon,
 } from 'lucide-react';
 import Flyer from './components/Flyer';
 import PrintBanner from './components/PrintBanner';
@@ -32,6 +34,7 @@ import BannerAssetPreview from './components/BannerAssetPreview';
 import BannersTabbedPage from './components/BannersTabbedPage';
 import AssetsPortal from './components/AssetsPortal';
 import { bannerConfigByRoute, bannerConfigs } from './components/bannerConfigs';
+import { translations } from './translations';
 
 // ─── Logo SVG Component ─────────────────────────────────────────────────────
 function MendezLogo({ size = 48, showText = true, dark = false }) {
@@ -134,6 +137,7 @@ function WhatsAppQR({
 	label = '',
 	showExportButton = false,
 	pdfTitle = 'Mendez Transport QR',
+	exportLabel = 'Export QR PNG',
 }) {
 	const qrRef = useRef(null);
 	const whatsappSVG = `data:image/svg+xml;base64,${btoa(`
@@ -212,7 +216,7 @@ function WhatsAppQR({
 					className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/16"
 				>
 					<FileDown size={16} />
-					Export QR PNG
+					{exportLabel}
 				</button>
 			)}
 		</div>
@@ -246,7 +250,7 @@ function FadeIn({ children, delay = 0, direction = 'up', className = '' }) {
 }
 
 // ─── NAVBAR ───────────────────────────────────────────────────────────────────
-function Navbar() {
+function Navbar({ t, language, setLanguage, theme, setTheme }) {
 	const [scrolled, setScrolled] = useState(false);
 	const [menuOpen, setMenuOpen] = useState(false);
 
@@ -257,10 +261,10 @@ function Navbar() {
 	}, []);
 
 	const links = [
-		{ label: 'Destinations', href: '#destinations' },
-		{ label: 'Prices', href: '#prices' },
-		{ label: 'Vehicle', href: '#vehicle' },
-		{ label: 'Contact', href: '#contact' },
+		{ label: t.nav.destinations, href: '#destinations' },
+		{ label: t.nav.prices, href: '#prices' },
+		{ label: t.nav.vehicle, href: '#vehicle' },
+		{ label: t.nav.contact, href: '#contact' },
 	];
 
 	return (
@@ -291,6 +295,21 @@ function Navbar() {
 							<span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-red group-hover:w-full transition-all duration-300" />
 						</a>
 					))}
+					<button
+						type="button"
+						onClick={() => setLanguage(language === 'es' ? 'en' : 'es')}
+						className="rounded-full border border-white/15 bg-white/5 px-2.5 py-1 text-[10px] font-semibold text-gray-300 hover:text-white hover:bg-white/10 transition-colors"
+					>
+						{language.toUpperCase()}
+					</button>
+					<button
+						type="button"
+						onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+						className="rounded-full border border-white/15 bg-white/5 p-1.5 text-gray-300 hover:text-white hover:bg-white/10 transition-colors"
+						aria-label="Toggle theme"
+					>
+						{theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
+					</button>
 					<a
 						href="https://wa.me/50769255088"
 						target="_blank"
@@ -298,13 +317,13 @@ function Navbar() {
 						className="btn-whatsapp !py-2 !px-4 !text-xs"
 					>
 						<WhatsAppIcon size={16} />
-						Book Now
+						{t.nav.bookNow}
 					</a>
 					<a
 						href="/mis-assets"
 						className="flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-semibold text-gray-300 hover:text-white hover:bg-white/10 transition-colors"
 					>
-						Mis Assets
+						{t.nav.assets}
 					</a>
 				</div>
 
@@ -345,7 +364,7 @@ function Navbar() {
 								className="btn-whatsapp justify-center mt-2"
 							>
 								<WhatsAppIcon size={20} />
-								Book on WhatsApp
+								{t.nav.bookWA}
 							</a>
 						</div>
 					</motion.div>
@@ -365,60 +384,53 @@ function Hero({ paidView = false }) {
 }
 
 // ─── BENEFITS ─────────────────────────────────────────────────────────────────
-function Benefits() {
+function Benefits({ t, theme }) {
 	const benefits = [
 		{
 			icon: <Shield size={28} />,
-			title: 'Safe & Reliable',
-			desc: "Professional drivers with years of experience on Panama's roads.",
+			title: t.benefits.items[0].title,
+			desc: t.benefits.items[0].desc,
 			color: 'from-blue-500 to-blue-700',
 		},
 		{
 			icon: <Users size={28} />,
-			title: 'Shared or Private',
-			desc: 'Choose between shared shuttle rates or full private transport.',
+			title: t.benefits.items[1].title,
+			desc: t.benefits.items[1].desc,
 			color: 'from-brand-red to-brand-red-dark',
 		},
 		{
 			icon: <Zap size={28} />,
-			title: 'Easy WhatsApp Booking',
-			desc: 'Reserve your seat in seconds — no apps, no credit card required.',
+			title: t.benefits.items[2].title,
+			desc: t.benefits.items[2].desc,
 			color: 'from-green-500 to-green-700',
 		},
 		{
 			icon: <Award size={28} />,
-			title: 'Tourist-Friendly',
-			desc: 'English-speaking service tailored for international travelers.',
+			title: t.benefits.items[3].title,
+			desc: t.benefits.items[3].desc,
 			color: 'from-amber-500 to-amber-700',
 		},
 	];
 
 	return (
-		<section className="py-20 bg-white">
+		<section className={`py-20 ${theme === 'dark' ? 'bg-brand-black' : 'bg-white'}`}>
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 				<FadeIn className="text-center mb-14">
-					<span className="text-brand-red text-sm font-bold uppercase tracking-widest">
-						Why Choose Us
-					</span>
-					<h2 className="font-display text-5xl text-brand-black mt-2">
-						TRAVEL THE WAY YOU DESERVE
-					</h2>
-					<p className="text-gray-500 mt-3 max-w-xl mx-auto">
-						Méndez Transport delivers premium shuttle experiences
-						across Panama's most beautiful destinations.
-					</p>
+					<span className="text-brand-red text-sm font-bold uppercase tracking-widest">{t.benefits.tag}</span>
+					<h2 className={`font-display text-5xl mt-2 ${theme === 'dark' ? 'text-white' : 'text-brand-black'}`}>{t.benefits.title}</h2>
+					<p className="text-gray-500 mt-3 max-w-xl mx-auto">{t.benefits.subtitle}</p>
 				</FadeIn>
 
 				<div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
 					{benefits.map((b, i) => (
 						<FadeIn key={b.title} delay={i * 0.12} direction="up">
-							<div className="card-hover group bg-white rounded-2xl p-7 border border-gray-100 shadow-sm hover:shadow-xl hover:border-brand-red/20 text-center">
+							<div className={`card-hover group rounded-2xl p-7 border shadow-sm hover:shadow-xl hover:border-brand-red/20 text-center ${theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-white border-gray-100'}`}>
 								<div
 									className={`w-16 h-16 mx-auto mb-5 rounded-2xl bg-gradient-to-br ${b.color} flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-300`}
 								>
 									{b.icon}
 								</div>
-								<h3 className="font-bold text-brand-black text-lg mb-2">
+								<h3 className={`font-bold text-lg mb-2 ${theme === 'dark' ? 'text-white' : 'text-brand-black'}`}>
 									{b.title}
 								</h3>
 								<p className="text-gray-500 text-sm leading-relaxed">
@@ -434,45 +446,38 @@ function Benefits() {
 }
 
 // ─── FEATURED DESTINATIONS ────────────────────────────────────────────────────
-function FeaturedDestinations() {
+function FeaturedDestinations({ t, theme }) {
 	const featured = [
 		{
-			name: 'Bocas del Toro',
-			tagline: 'Turquoise waters & island paradise',
+			name: t.destinations.items[0].name,
+			tagline: t.destinations.items[0].tagline,
 			price: '$65',
 			image: '/assets/Bocas-del-toro-1.jpg',
-			badge: 'Most Popular',
+			badge: t.destinations.items[0].badge,
 		},
 		{
-			name: 'El Valle de Antón',
-			tagline: 'Volcanic crater, waterfalls & nature',
+			name: t.destinations.items[1].name,
+			tagline: t.destinations.items[1].tagline,
 			price: '$40',
 			image: '/assets/tips-valle-de-anton-panama.jpg',
-			badge: 'Nature Escape',
+			badge: t.destinations.items[1].badge,
 		},
 		{
-			name: 'Panama City',
-			tagline: 'Skyline, canal & urban culture',
+			name: t.destinations.items[2].name,
+			tagline: t.destinations.items[2].tagline,
 			price: '$55',
 			image: '/assets/Panama-City.jpg',
-			badge: 'City Vibes',
+			badge: t.destinations.items[2].badge,
 		},
 	];
 
 	return (
-		<section id="destinations" className="py-20 bg-gray-50">
+		<section id="destinations" className={`py-20 ${theme === 'dark' ? 'bg-[#121212]' : 'bg-gray-50'}`}>
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 				<FadeIn className="text-center mb-14">
-					<span className="text-brand-red text-sm font-bold uppercase tracking-widest">
-						Where We Go
-					</span>
-					<h2 className="font-display text-5xl text-brand-black mt-2">
-						FEATURED DESTINATIONS
-					</h2>
-					<p className="text-gray-500 mt-3 max-w-xl mx-auto">
-						Hand-picked destinations for the ultimate Panama
-						experience.
-					</p>
+					<span className="text-brand-red text-sm font-bold uppercase tracking-widest">{t.destinations.tag}</span>
+					<h2 className={`font-display text-5xl mt-2 ${theme === 'dark' ? 'text-white' : 'text-brand-black'}`}>{t.destinations.title}</h2>
+					<p className="text-gray-500 mt-3 max-w-xl mx-auto">{t.destinations.subtitle}</p>
 				</FadeIn>
 
 				<div className="grid md:grid-cols-3 gap-6">
@@ -507,7 +512,7 @@ function FeaturedDestinations() {
 									</p>
 									<div className="flex items-center gap-2 text-white/90 text-sm font-semibold group-hover:text-[#25D366] transition-colors">
 										<WhatsAppIcon size={16} />
-										Book this route
+										{t.destinations.book}
 										<ArrowRight
 											size={14}
 											className="group-hover:translate-x-1 transition-transform"
@@ -524,14 +529,14 @@ function FeaturedDestinations() {
 }
 
 // ─── PRICES / ALL DESTINATIONS ────────────────────────────────────────────────
-function PricesSection() {
+function PricesSection({ t }) {
 	const destinations = [
-		{ name: 'Panama City', price: 55, icon: '🏙️', popular: false },
+		{ name: t.destinations.items[2].name, price: 55, icon: '🏙️', popular: false },
 		{ name: 'Boquete', price: 35, icon: '⛰️', popular: true },
 		{ name: 'David', price: 30, icon: '🏘️', popular: false },
-		{ name: 'El Valle de Antón', price: 40, icon: '🌋', popular: false },
+		{ name: t.destinations.items[1].name, price: 40, icon: '🌋', popular: false },
 		{ name: 'Playa Venado', price: 40, icon: '🏖️', popular: false },
-		{ name: 'Bocas del Toro', price: 65, icon: '🏝️', popular: true },
+		{ name: t.destinations.items[0].name, price: 65, icon: '🏝️', popular: true },
 	];
 
 	return (
@@ -539,13 +544,13 @@ function PricesSection() {
 			<div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
 				<FadeIn className="text-center mb-14">
 					<span className="text-brand-red text-sm font-bold uppercase tracking-widest">
-						Transparent Pricing
+						{t.prices.tag}
 					</span>
 					<h2 className="font-display text-5xl text-white mt-2">
-						DESTINATIONS & PRICES
+						{t.prices.title}
 					</h2>
 					<p className="text-gray-400 mt-3 max-w-xl mx-auto">
-						Flat rates, no hidden fees. Daily departures at 7:40 AM.
+						{t.prices.subtitle}
 					</p>
 				</FadeIn>
 
@@ -556,11 +561,11 @@ function PricesSection() {
 							<div className="flex items-center gap-3">
 								<Navigation size={20} className="text-white" />
 								<span className="text-white font-bold uppercase tracking-widest text-sm">
-									Destination
+									{t.prices.colDest}
 								</span>
 							</div>
 							<span className="text-white font-bold uppercase tracking-widest text-sm">
-								Price / Person
+								{t.prices.colPrice}
 							</span>
 						</div>
 
@@ -588,7 +593,7 @@ function PricesSection() {
 											</span>
 											{d.popular && (
 												<span className="ml-3 text-xs bg-brand-red/20 text-brand-red border border-brand-red/30 px-2 py-0.5 rounded-full font-semibold">
-													Popular
+													{t.prices.popular}
 												</span>
 											)}
 										</div>
@@ -609,9 +614,9 @@ function PricesSection() {
 						<div className="bg-white/5 px-8 py-4 flex items-center gap-3">
 							<Clock size={16} className="text-brand-red" />
 							<span className="text-gray-400 text-sm">
-								All routes depart daily at{' '}
-								<strong className="text-white">7:40 AM</strong>{' '}
-								· Private transport available upon request
+								{t.prices.note}{' '}
+								<strong className="text-white">{t.prices.noteStrong}</strong>{' '}
+								{t.prices.noteExtra}
 							</span>
 						</div>
 					</div>
@@ -625,7 +630,7 @@ function PricesSection() {
 						className="btn-whatsapp text-lg mx-auto"
 					>
 						<WhatsAppIcon size={22} />
-						Reserve Your Seat Now
+						{t.prices.cta}
 					</a>
 				</FadeIn>
 			</div>
@@ -634,37 +639,35 @@ function PricesSection() {
 }
 
 // ─── VEHICLE SHOWCASE ─────────────────────────────────────────────────────────
-function VehicleShowcase() {
+function VehicleShowcase({ t, theme }) {
 	const features = [
-		{ icon: <Shield size={20} />, text: 'Fully insured & licensed' },
-		{ icon: <Wifi size={20} />, text: 'Air conditioning' },
-		{ icon: <Users size={20} />, text: 'Up to 14 passengers' },
-		{ icon: <Calendar size={20} />, text: 'Daily availability' },
-		{ icon: <CheckCircle size={20} />, text: 'Luggage space included' },
-		{ icon: <Star size={20} />, text: 'Professional drivers' },
+		{ icon: <Shield size={20} />, text: t.vehicle.features[0] },
+		{ icon: <Wifi size={20} />, text: t.vehicle.features[1] },
+		{ icon: <Users size={20} />, text: t.vehicle.features[2] },
+		{ icon: <Calendar size={20} />, text: t.vehicle.features[3] },
+		{ icon: <CheckCircle size={20} />, text: t.vehicle.features[4] },
+		{ icon: <Star size={20} />, text: t.vehicle.features[5] },
 	];
 
 	return (
-		<section id="vehicle" className="py-20 bg-white overflow-hidden">
+		<section id="vehicle" className={`py-20 overflow-hidden ${theme === 'dark' ? 'bg-brand-black' : 'bg-white'}`}>
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 				<div className="grid lg:grid-cols-2 gap-16 items-center">
 					{/* Text side */}
 					<FadeIn direction="left">
 						<span className="text-brand-red text-sm font-bold uppercase tracking-widest">
-							Our Vehicle
+							{t.vehicle.tag}
 						</span>
-						<h2 className="font-display text-5xl text-brand-black mt-2 mb-5">
-							TRAVEL IN
+						<h2 className={`font-display text-5xl mt-2 mb-5 ${theme === 'dark' ? 'text-white' : 'text-brand-black'}`}>
+							{t.vehicle.title1}
 							<br />
-							<span className="text-brand-red">COMFORT</span> &
+							<span className="text-brand-red">{t.vehicle.title2}</span>{' '}
+							&
 							<br />
-							CONFIDENCE
+							{t.vehicle.title3}
 						</h2>
 						<p className="text-gray-600 mb-8 leading-relaxed text-lg">
-							Our Toyota HiAce "Turismo" minibus is equipped for
-							the road and ready for tourists. Spacious,
-							air-conditioned and maintained to the highest
-							standard — your journey is in safe hands.
+							{t.vehicle.desc}
 						</p>
 						<div className="grid grid-cols-2 gap-3 mb-8">
 							{features.map(f => (
@@ -688,7 +691,7 @@ function VehicleShowcase() {
 							className="btn-primary"
 						>
 							<WhatsAppIcon size={20} />
-							Book Your Seat
+							{t.vehicle.cta}
 						</a>
 					</FadeIn>
 
@@ -722,10 +725,10 @@ function VehicleShowcase() {
 								<div className="absolute inset-0 bg-gradient-to-r from-brand-black/70 to-transparent" />
 								<div className="absolute left-5 top-1/2 -translate-y-1/2">
 									<p className="text-white font-bold text-lg">
-										Spacious Interior
+										{t.vehicle.interior}
 									</p>
 									<p className="text-gray-300 text-sm">
-										Comfortable seating for every journey
+										{t.vehicle.interiorSub}
 									</p>
 								</div>
 							</div>
@@ -740,7 +743,7 @@ function VehicleShowcase() {
 									7:40
 								</div>
 								<div className="text-xs font-semibold uppercase tracking-widest opacity-90">
-									Daily AM
+									{t.vehicle.dailyAM}
 								</div>
 							</motion.div>
 						</div>
@@ -752,7 +755,7 @@ function VehicleShowcase() {
 }
 
 // ─── BANNER SECTION ───────────────────────────────────────────────────────────
-function BannerSection() {
+function BannerSection({ t }) {
 	return (
 		<section className="py-16 gradient-dark overflow-hidden relative">
 			{/* Background Bocas image */}
@@ -770,18 +773,16 @@ function BannerSection() {
 					<FadeIn direction="left" className="lg:col-span-2">
 						<div className="glass rounded-3xl p-10">
 							<h2 className="font-display text-6xl text-white mb-4 leading-none">
-								YOUR PANAMA
+								{t.cta.title1}
 								<br />
 								<span className="text-brand-red">
-									ADVENTURE
+									{t.cta.title2}
 								</span>
 								<br />
-								STARTS HERE
+								{t.cta.title3}
 							</h2>
 							<p className="text-gray-300 text-lg mb-8 max-w-lg">
-								From the lush highlands of Boquete to the
-								crystal lagoons of Bocas del Toro — Méndez
-								Transport takes you there in comfort and style.
+								{t.cta.desc}
 							</p>
 							<div className="flex flex-col sm:flex-row gap-4">
 								<a
@@ -824,7 +825,7 @@ function BannerSection() {
 }
 
 // ─── BUSINESS CARD SECTION ────────────────────────────────────────────────────
-function BusinessCardSection({ paidView = false }) {
+function BusinessCardSection({ paidView = false, t, theme }) {
 	const firstPreviewImage = paidView
 		? '/assets/mis-assets/Tarjeta_4k.png'
 		: '/assets/Panama-City.jpg';
@@ -833,18 +834,17 @@ function BusinessCardSection({ paidView = false }) {
 		: '/assets/tips-valle-de-anton-panama.jpg';
 
 	return (
-		<section className="py-20 bg-gray-50">
+		<section className={`py-20 ${theme === 'dark' ? 'bg-[#121212]' : 'bg-gray-50'}`}>
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 				<FadeIn className="text-center mb-14">
 					<span className="text-brand-red text-sm font-bold uppercase tracking-widest">
-						Always With You
+						{t.contact.tag}
 					</span>
-					<h2 className="font-display text-5xl text-brand-black mt-2">
-						SAVE OUR CONTACT
+					<h2 className={`font-display text-5xl mt-2 ${theme === 'dark' ? 'text-white' : 'text-brand-black'}`}>
+						{t.contact.title}
 					</h2>
 					<p className="text-gray-500 mt-3 max-w-xl mx-auto">
-						Scan the QR code to open WhatsApp instantly or save our
-						info for your trip.
+						{t.contact.subtitle}
 					</p>
 				</FadeIn>
 
@@ -889,9 +889,10 @@ function BusinessCardSection({ paidView = false }) {
 								<WhatsAppQR
 									url="https://wa.me/50769255088"
 									size={180}
-									label="Scan to open WhatsApp"
+									label={t.contact.scan}
 									showExportButton={true}
 									pdfTitle="Mendez Transport WhatsApp QR"
+									exportLabel={t.contact.exportQr}
 								/>
 							</div>
 
@@ -947,24 +948,37 @@ function BusinessCardSection({ paidView = false }) {
 	);
 }
 
-function LandingPage({ paidView = false }) {
+function LandingPage({
+	paidView = false,
+	t,
+	theme,
+	language,
+	setLanguage,
+	setTheme,
+}) {
 	return (
-		<div className="min-h-screen">
-			<Navbar />
+		<div className={`min-h-screen ${theme === 'dark' ? 'bg-brand-black' : 'bg-white'}`}>
+			<Navbar
+				t={t}
+				language={language}
+				setLanguage={setLanguage}
+				theme={theme}
+				setTheme={setTheme}
+			/>
 			<Hero paidView={paidView} />
-			<Benefits />
-			<FeaturedDestinations />
-			<PricesSection />
-			<VehicleShowcase />
-			<BannerSection />
-			<BusinessCardSection paidView={paidView} />
-			<ContactSection />
-			<Footer />
+			<Benefits t={t} theme={theme} />
+			<FeaturedDestinations t={t} theme={theme} />
+			<PricesSection t={t} />
+			<VehicleShowcase t={t} theme={theme} />
+			<BannerSection t={t} />
+			<BusinessCardSection paidView={paidView} t={t} theme={theme} />
+			<ContactSection t={t} />
+			<Footer t={t} />
 		</div>
 	);
 }
 
-function PaidViewLogin({ onSuccess }) {
+function PaidViewLogin({ onSuccess, language }) {
 	const [password, setPassword] = useState('');
 	const [error, setError] = useState(false);
 	const ACCESS_PASSWORD = 'mendez507';
@@ -982,11 +996,9 @@ function PaidViewLogin({ onSuccess }) {
 	return (
 		<div className="min-h-screen bg-brand-black flex items-center justify-center px-4">
 			<div className="w-full max-w-sm rounded-3xl border border-white/10 bg-white/5 p-8 text-center shadow-2xl backdrop-blur-sm">
-				<h1 className="font-display text-3xl text-white mb-1">
-					Vista Pagada
-				</h1>
+				<h1 className="font-display text-3xl text-white mb-1">{language === 'es' ? 'Vista Pagada' : 'Paid View'}</h1>
 				<p className="text-gray-400 text-sm mb-6">
-					Ingresa la contraseña para continuar.
+					{language === 'es' ? 'Ingresa la contraseña para continuar.' : 'Enter password to continue.'}
 				</p>
 				<form onSubmit={handleSubmit} className="space-y-3">
 					<input
@@ -996,7 +1008,7 @@ function PaidViewLogin({ onSuccess }) {
 							setPassword(event.target.value);
 							if (error) setError(false);
 						}}
-						placeholder="Contraseña"
+						placeholder={language === 'es' ? 'Contraseña' : 'Password'}
 						autoFocus
 						className={`w-full rounded-xl border px-4 py-3 text-center text-white bg-white/8 outline-none transition-colors text-sm font-medium tracking-widest ${
 							error
@@ -1006,14 +1018,14 @@ function PaidViewLogin({ onSuccess }) {
 					/>
 					{error && (
 						<p className="text-xs text-red-400 font-semibold">
-							Contraseña incorrecta.
+							{language === 'es' ? 'Contraseña incorrecta.' : 'Wrong password.'}
 						</p>
 					)}
 					<button
 						type="submit"
 						className="w-full rounded-xl bg-brand-red hover:bg-brand-red-dark text-white font-bold py-3 transition-colors"
 					>
-						Entrar
+						{language === 'es' ? 'Entrar' : 'Enter'}
 					</button>
 				</form>
 			</div>
@@ -1022,7 +1034,7 @@ function PaidViewLogin({ onSuccess }) {
 }
 
 // ─── CONTACT SECTION ──────────────────────────────────────────────────────────
-function ContactSection() {
+function ContactSection({ t }) {
 	return (
 		<section
 			id="contact"
@@ -1037,17 +1049,15 @@ function ContactSection() {
 			<div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
 				<FadeIn>
 					<span className="text-brand-red text-sm font-bold uppercase tracking-widest">
-						Get In Touch
+						{t.contact.tag2}
 					</span>
 					<h2 className="font-display text-6xl text-white mt-2 mb-4">
-						RESERVE YOUR
+						{t.contact.title2}
 						<br />
-						<span className="text-brand-red">SEAT TODAY</span>
+						<span className="text-brand-red">{t.contact.span2}</span>
 					</h2>
 					<p className="text-gray-400 text-xl mb-12 max-w-2xl mx-auto">
-						Don't miss your departure. Contact us on WhatsApp right
-						now and confirm your spot for tomorrow's 7:40 AM
-						shuttle.
+						{t.contact.desc2}
 					</p>
 				</FadeIn>
 
@@ -1058,9 +1068,10 @@ function ContactSection() {
 						<WhatsAppQR
 							url="https://wa.me/50769255088"
 							size={220}
-							label="Scan · Tap · Book"
+							label={t.contact.scanBook}
 							showExportButton={true}
 							pdfTitle="Mendez Transport Booking QR"
+							exportLabel={t.contact.exportQr}
 						/>
 					</div>
 				</FadeIn>
@@ -1115,7 +1126,7 @@ function ContactSection() {
 							className="flex items-center gap-2 hover:text-brand-red transition-colors font-medium"
 						>
 							<Phone size={20} />
-							Call Us
+							{t.nav.contact}
 						</a>
 					</div>
 				</FadeIn>
@@ -1125,7 +1136,7 @@ function ContactSection() {
 }
 
 // ─── FOOTER ───────────────────────────────────────────────────────────────────
-function Footer() {
+function Footer({ t }) {
 	return (
 		<footer className="bg-[#0d0d0d] border-t border-white/5 py-10">
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1134,11 +1145,11 @@ function Footer() {
 
 					<div className="text-center text-gray-500 text-sm">
 						<p className="font-semibold text-gray-300 mb-1">
-							Shared or Private Transportation
+							{t.footer.tagline}
 						</p>
 						<div className="flex items-center justify-center gap-2">
 							<Clock size={13} className="text-brand-red" />
-							<span>Daily Departure 7:40 AM</span>
+							<span>{t.footer.daily}</span>
 						</div>
 					</div>
 
@@ -1171,8 +1182,7 @@ function Footer() {
 				</div>
 
 				<div className="mt-8 pt-6 border-t border-white/5 text-center text-gray-700 text-xs">
-					© {new Date().getFullYear()} Méndez Transport · Panama · All
-					rights reserved
+					© {new Date().getFullYear()} Méndez Transport · Panama · {t.footer.rights}
 				</div>
 			</div>
 		</footer>
@@ -1181,9 +1191,24 @@ function Footer() {
 
 // ─── APP MAIN ─────────────────────────────────────────────────────────────────
 export default function App() {
+	const [language, setLanguage] = useState(
+		() => window.localStorage.getItem('lang_pref') || 'es'
+	);
+	const [theme, setTheme] = useState(
+		() => window.localStorage.getItem('theme_pref') || 'dark'
+	);
 	const [paidViewAuthenticated, setPaidViewAuthenticated] = useState(() =>
 		window.sessionStorage.getItem('paid_view_access') === 'granted'
 	);
+	const t = translations[language] ?? translations.es;
+
+	useEffect(() => {
+		window.localStorage.setItem('lang_pref', language);
+	}, [language]);
+
+	useEffect(() => {
+		window.localStorage.setItem('theme_pref', theme);
+	}, [theme]);
 	const bannerPreview = bannerConfigByRoute[window.location.pathname];
 	if (bannerPreview) {
 		return <BannerAssetPreview config={bannerPreview} />;
@@ -1218,16 +1243,44 @@ export default function App() {
 		if (!paidViewAuthenticated) {
 			return (
 				<PaidViewLogin
+					language={language}
 					onSuccess={() => setPaidViewAuthenticated(true)}
 				/>
 			);
 		}
-		return <LandingPage paidView={true} />;
+		return (
+			<LandingPage
+				paidView={true}
+				t={t}
+				theme={theme}
+				language={language}
+				setLanguage={setLanguage}
+				setTheme={setTheme}
+			/>
+		);
 	}
 
 	if (window.location.pathname === '/vista-muestra') {
-		return <LandingPage paidView={false} />;
+		return (
+			<LandingPage
+				paidView={false}
+				t={t}
+				theme={theme}
+				language={language}
+				setLanguage={setLanguage}
+				setTheme={setTheme}
+			/>
+		);
 	}
 
-	return <LandingPage paidView={false} />;
+	return (
+		<LandingPage
+			paidView={false}
+			t={t}
+			theme={theme}
+			language={language}
+			setLanguage={setLanguage}
+			setTheme={setTheme}
+		/>
+	);
 }
