@@ -7,8 +7,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-        display: ['Bebas Neue', 'sans-serif'],
+        sans: ['Manrope', 'sans-serif'],
+        display: ['Cormorant Garamond', 'serif'],
       },
       colors: {
         brand: {

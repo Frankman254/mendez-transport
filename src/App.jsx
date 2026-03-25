@@ -13,7 +13,6 @@ import {
 	Zap,
 	CheckCircle,
 	Instagram,
-	Globe,
 	ArrowRight,
 	Menu,
 	X,
@@ -23,8 +22,8 @@ import {
 	Award,
 	FileDown,
 	Lock,
-	Sun,
-	Moon,
+	Compass,
+	Luggage,
 } from 'lucide-react';
 import Flyer from './components/Flyer';
 import PrintBanner from './components/PrintBanner';
@@ -250,7 +249,7 @@ function FadeIn({ children, delay = 0, direction = 'up', className = '' }) {
 }
 
 // ─── NAVBAR ───────────────────────────────────────────────────────────────────
-function Navbar({ t, language, setLanguage, theme, setTheme }) {
+function Navbar({ t, language, setLanguage }) {
 	const [scrolled, setScrolled] = useState(false);
 	const [menuOpen, setMenuOpen] = useState(false);
 
@@ -263,6 +262,7 @@ function Navbar({ t, language, setLanguage, theme, setTheme }) {
 	const links = [
 		{ label: t.nav.destinations, href: '#destinations' },
 		{ label: t.nav.prices, href: '#prices' },
+		{ label: t.nav.journey, href: '#journey' },
 		{ label: t.nav.vehicle, href: '#vehicle' },
 		{ label: t.nav.contact, href: '#contact' },
 	];
@@ -277,11 +277,11 @@ function Navbar({ t, language, setLanguage, theme, setTheme }) {
 			<div
 				className={`mx-auto flex h-14 max-w-6xl items-center justify-between rounded-full border px-4 sm:px-6 lg:px-8 ${
 					scrolled
-						? 'border-white/10 bg-brand-black/82 backdrop-blur-md shadow-2xl'
-						: 'border-white/10 bg-brand-black/30 backdrop-blur-md'
+						? 'border-[#d9c8b8] bg-[#fffaf4]/92 shadow-[0_18px_60px_rgba(36,25,10,0.12)] backdrop-blur-md'
+						: 'border-white/40 bg-white/55 backdrop-blur-md'
 				}`}
 			>
-				<MendezLogo size={28} showText={true} dark={false} />
+				<MendezLogo size={28} showText={true} dark={true} />
 
 				{/* Desktop nav */}
 				<div className="hidden md:flex items-center gap-6">
@@ -289,41 +289,27 @@ function Navbar({ t, language, setLanguage, theme, setTheme }) {
 						<a
 							key={link.href}
 							href={link.href}
-							className="text-gray-300/85 hover:text-white text-xs font-medium tracking-[0.18em] uppercase transition-colors duration-200 relative group"
+							className="relative text-xs font-medium uppercase tracking-[0.18em] text-[#5f6d67] transition-colors duration-200 hover:text-[#18231f] group"
 						>
 							{link.label}
-							<span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-red group-hover:w-full transition-all duration-300" />
+							<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-[#b85e34] transition-all duration-300 group-hover:w-full" />
 						</a>
 					))}
 					<button
 						type="button"
 						onClick={() => setLanguage(language === 'es' ? 'en' : 'es')}
-						className="rounded-full border border-white/15 bg-white/5 px-2.5 py-1 text-[10px] font-semibold text-gray-300 hover:text-white hover:bg-white/10 transition-colors"
+						className="rounded-full border border-[#ddd0c2] bg-white px-2.5 py-1 text-[10px] font-semibold text-[#5f6d67] transition-colors hover:text-[#18231f]"
 					>
 						{language.toUpperCase()}
-					</button>
-					<button
-						type="button"
-						onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-						className="rounded-full border border-white/15 bg-white/5 p-1.5 text-gray-300 hover:text-white hover:bg-white/10 transition-colors"
-						aria-label="Toggle theme"
-					>
-						{theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
 					</button>
 					<a
 						href="https://wa.me/50769255088"
 						target="_blank"
 						rel="noopener noreferrer"
-						className="btn-whatsapp !py-2 !px-4 !text-xs"
+						className="btn-whatsapp !px-4 !py-2 !text-xs"
 					>
 						<WhatsAppIcon size={16} />
 						{t.nav.bookNow}
-					</a>
-					<a
-						href="/mis-assets"
-						className="flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-semibold text-gray-300 hover:text-white hover:bg-white/10 transition-colors"
-					>
-						{t.nav.assets}
 					</a>
 				</div>
 
@@ -344,7 +330,7 @@ function Navbar({ t, language, setLanguage, theme, setTheme }) {
 						initial={{ opacity: 0, height: 0 }}
 						animate={{ opacity: 1, height: 'auto' }}
 						exit={{ opacity: 0, height: 0 }}
-						className="md:hidden bg-brand-black/98 border-t border-brand-red/20"
+						className="border-t border-[#e0d0c1] bg-[#fffaf4]/98 md:hidden"
 					>
 						<div className="px-4 py-4 flex flex-col gap-4">
 							{links.map(link => (
@@ -352,7 +338,7 @@ function Navbar({ t, language, setLanguage, theme, setTheme }) {
 									key={link.href}
 									href={link.href}
 									onClick={() => setMenuOpen(false)}
-									className="text-gray-300 hover:text-brand-red text-base font-medium py-2 border-b border-white/5 transition-colors"
+									className="border-b border-[#eadfd4] py-2 text-base font-medium text-[#5f6d67] transition-colors hover:text-[#b85e34]"
 								>
 									{link.label}
 								</a>
@@ -375,16 +361,198 @@ function Navbar({ t, language, setLanguage, theme, setTheme }) {
 }
 
 // ─── HERO ─────────────────────────────────────────────────────────────────────
-function Hero({ paidView = false }) {
+function PublicHero({ t }) {
+	const routeHighlights = [
+		{
+			name: 'Bocas del Toro',
+			meta: 'Islas, mar turquesa y una llegada más relajada',
+			image: '/assets/Bocas-del-toro-2.jpg',
+		},
+		{
+			name: 'Boquete',
+			meta: 'Montañas frescas, café y escapadas tranquilas',
+			image: '/assets/tips-valle-de-anton-panama.jpg',
+		},
+		{
+			name: 'Ciudad de Panamá',
+			meta: 'Conexiones urbanas y traslados cómodos',
+			image: '/assets/Panama-City-11.jpg',
+		},
+	];
+
+	return (
+		<section className="relative overflow-hidden bg-[#f6efe4] pt-24 text-[#18231f] sm:pt-28">
+			<div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(227,30,36,0.10),transparent_28%),radial-gradient(circle_at_80%_20%,rgba(19,76,65,0.14),transparent_24%),linear-gradient(180deg,#f6efe4_0%,#f8f5ee_48%,#fffdf9_100%)]" />
+			<div className="absolute right-0 top-0 h-72 w-72 rounded-full bg-[#d97745]/10 blur-3xl" />
+
+			<div className="relative mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8 lg:pb-24">
+				<div className="grid items-end gap-10 lg:grid-cols-[1.05fr_0.95fr]">
+					<FadeIn className="max-w-2xl">
+						<div className="inline-flex items-center gap-2 rounded-full border border-[#c9b49e] bg-white/70 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-[#8b5e3c]">
+							<Compass size={14} />
+							{t.hero.eyebrow}
+						</div>
+						<h1 className="mt-6 max-w-xl font-display text-6xl leading-[0.92] text-[#18231f] sm:text-7xl lg:text-[5.4rem]">
+							{t.hero.title1}
+							<span className="block text-brand-red">{t.hero.title2}</span>
+						</h1>
+						<p className="mt-6 max-w-xl text-lg leading-8 text-[#55615d]">
+							{t.hero.subtitle}
+						</p>
+
+						<div className="mt-8 flex flex-col gap-3 sm:flex-row">
+							<a
+								href="#contact"
+								className="inline-flex items-center justify-center gap-2 rounded-full bg-[#18231f] px-7 py-4 text-sm font-bold uppercase tracking-[0.18em] text-white transition-transform duration-300 hover:-translate-y-0.5"
+							>
+								{t.hero.primary}
+								<ArrowRight size={16} />
+							</a>
+							<a
+								href="#destinations"
+								className="inline-flex items-center justify-center gap-2 rounded-full border border-[#18231f]/15 bg-white/70 px-7 py-4 text-sm font-bold uppercase tracking-[0.18em] text-[#18231f] transition-colors duration-300 hover:bg-white"
+							>
+								{t.hero.secondary}
+							</a>
+						</div>
+
+						<div className="mt-10 flex flex-wrap gap-3">
+							{t.hero.highlights.map((highlight) => (
+								<div
+									key={highlight}
+									className="rounded-full border border-[#d6c8bb] bg-white/70 px-4 py-2 text-sm font-semibold text-[#40504a]"
+								>
+									{highlight}
+								</div>
+							))}
+						</div>
+					</FadeIn>
+
+					<FadeIn direction="right">
+						<div className="relative">
+							<div className="absolute -left-6 -top-6 h-28 w-28 rounded-[2rem] bg-[#0f5b4f]/10 blur-2xl" />
+							<div className="overflow-hidden rounded-[2rem] border border-[#e6d7c9] bg-white p-4 shadow-[0_28px_80px_rgba(45,35,18,0.12)]">
+								<div className="grid gap-4">
+									<div className="relative overflow-hidden rounded-[1.6rem]">
+										<img
+											src="/assets/Panama-City-11.jpg"
+											alt="Viaje por Panamá con Méndez Transport"
+											className="h-[420px] w-full object-cover"
+										/>
+										<div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(15,32,29,0.04)_0%,rgba(15,32,29,0.56)_100%)]" />
+										<div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+											<p className="text-xs font-semibold uppercase tracking-[0.24em] text-white/80">
+												{t.hero.cardTitle}
+											</p>
+											<p className="mt-2 max-w-sm text-sm leading-6 text-white/82">
+												{t.hero.cardNote}
+											</p>
+										</div>
+									</div>
+
+									<div className="grid gap-3 sm:grid-cols-3">
+										{routeHighlights.map((route) => (
+											<div
+												key={route.name}
+												className="overflow-hidden rounded-[1.4rem] border border-[#efe4da] bg-[#fcfaf6]"
+											>
+												<img
+													src={route.image}
+													alt={route.name}
+													className="h-28 w-full object-cover"
+												/>
+												<div className="p-4">
+													<p className="text-sm font-bold text-[#18231f]">{route.name}</p>
+													<p className="mt-1 text-xs leading-5 text-[#6b7772]">{route.meta}</p>
+												</div>
+											</div>
+										))}
+									</div>
+								</div>
+							</div>
+						</div>
+					</FadeIn>
+				</div>
+			</div>
+		</section>
+	);
+}
+
+function Hero({ paidView = false, t }) {
 	if (paidView) {
-		return <ShuttleBanner imageSrc={PRIVATE_CARD_IMAGE} />;
+		return (
+			<section className="relative overflow-hidden bg-[#f4ecdf] pt-24 sm:pt-28">
+				<div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(184,94,52,0.10),transparent_28%),linear-gradient(180deg,#f4ecdf_0%,#fbf7f1_100%)]" />
+				<div className="relative mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8 lg:pb-24">
+					<div className="grid items-center gap-10 lg:grid-cols-[0.9fr_1.1fr]">
+						<FadeIn className="max-w-xl">
+							<div className="inline-flex items-center gap-2 rounded-full border border-[#d5c4b5] bg-white/70 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-[#8b5e3c]">
+								<Compass size={14} />
+								{t.hero.eyebrow}
+							</div>
+							<h1 className="mt-6 font-display text-6xl leading-[0.92] text-[#18231f] sm:text-7xl">
+								{t.hero.title1}
+								<span className="block text-brand-red">{t.hero.title2}</span>
+							</h1>
+							<p className="mt-6 text-lg leading-8 text-[#5b6762]">
+								{t.hero.subtitle}
+							</p>
+							<div className="mt-8 flex flex-col gap-3 sm:flex-row">
+								<a
+									href="#contact"
+									className="inline-flex items-center justify-center gap-2 rounded-full bg-[#18231f] px-7 py-4 text-sm font-bold uppercase tracking-[0.18em] text-white"
+								>
+									{t.hero.primary}
+									<ArrowRight size={16} />
+								</a>
+								<a
+									href="/mis-assets"
+									className="inline-flex items-center justify-center gap-2 rounded-full border border-[#18231f]/15 bg-white/70 px-7 py-4 text-sm font-bold uppercase tracking-[0.18em] text-[#18231f]"
+								>
+									{t.nav.clientAccess}
+								</a>
+							</div>
+						</FadeIn>
+
+						<FadeIn direction="right">
+							<div className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
+								<div className="overflow-hidden rounded-[2rem] border border-[#e7d8c8] bg-white p-4 shadow-[0_28px_80px_rgba(45,35,18,0.12)]">
+									<img
+										src={PRIVATE_CARD_IMAGE}
+										alt="Vista pagada de los assets de Méndez Transport"
+										className="w-full rounded-[1.4rem] object-cover"
+									/>
+								</div>
+								<div className="space-y-5">
+									<div className="overflow-hidden rounded-[2rem] border border-[#e7d8c8] bg-white p-4 shadow-[0_22px_60px_rgba(45,35,18,0.10)]">
+										<img
+											src="/assets/mis-assets/Banner_oscuro_4k.png"
+											alt="Banner premium de Méndez Transport"
+											className="w-full rounded-[1.4rem] object-cover"
+										/>
+									</div>
+									<div className="rounded-[2rem] border border-[#e7d8c8] bg-[#fcf8f1] p-6">
+										<p className="text-xs font-bold uppercase tracking-[0.22em] text-[#a35d37]">
+											{t.hero.paidBadge}
+										</p>
+										<p className="mt-3 text-base leading-7 text-[#5b6762]">
+											{t.hero.paidDesc}
+										</p>
+									</div>
+								</div>
+							</div>
+						</FadeIn>
+					</div>
+				</div>
+			</section>
+		);
 	}
 
-	return <ShuttleBanner />;
+	return <PublicHero t={t} />;
 }
 
 // ─── BENEFITS ─────────────────────────────────────────────────────────────────
-function Benefits({ t, theme }) {
+function Benefits({ t }) {
 	const benefits = [
 		{
 			icon: <Shield size={28} />,
@@ -413,27 +581,27 @@ function Benefits({ t, theme }) {
 	];
 
 	return (
-		<section className={`py-20 ${theme === 'dark' ? 'bg-brand-black' : 'bg-white'}`}>
+		<section className="bg-[#fffaf4] py-20">
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 				<FadeIn className="text-center mb-14">
-					<span className="text-brand-red text-sm font-bold uppercase tracking-widest">{t.benefits.tag}</span>
-					<h2 className={`font-display text-5xl mt-2 ${theme === 'dark' ? 'text-white' : 'text-brand-black'}`}>{t.benefits.title}</h2>
-					<p className="text-gray-500 mt-3 max-w-xl mx-auto">{t.benefits.subtitle}</p>
+					<span className="text-sm font-bold uppercase tracking-[0.24em] text-[#a2552f]">{t.benefits.tag}</span>
+					<h2 className="mt-3 font-display text-5xl text-[#18231f] sm:text-6xl">{t.benefits.title}</h2>
+					<p className="mx-auto mt-4 max-w-2xl text-lg leading-8 text-[#66726e]">{t.benefits.subtitle}</p>
 				</FadeIn>
 
 				<div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
 					{benefits.map((b, i) => (
 						<FadeIn key={b.title} delay={i * 0.12} direction="up">
-							<div className={`card-hover group rounded-2xl p-7 border shadow-sm hover:shadow-xl hover:border-brand-red/20 text-center ${theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-white border-gray-100'}`}>
+							<div className="card-hover group rounded-[2rem] border border-[#eadfd4] bg-white p-7 text-center shadow-[0_18px_50px_rgba(46,34,14,0.06)] hover:border-[#d8bea8]">
 								<div
 									className={`w-16 h-16 mx-auto mb-5 rounded-2xl bg-gradient-to-br ${b.color} flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform duration-300`}
 								>
 									{b.icon}
 								</div>
-								<h3 className={`font-bold text-lg mb-2 ${theme === 'dark' ? 'text-white' : 'text-brand-black'}`}>
+								<h3 className="mb-2 text-xl font-bold text-[#18231f]">
 									{b.title}
 								</h3>
-								<p className="text-gray-500 text-sm leading-relaxed">
+								<p className="text-sm leading-7 text-[#66726e]">
 									{b.desc}
 								</p>
 							</div>
@@ -446,14 +614,15 @@ function Benefits({ t, theme }) {
 }
 
 // ─── FEATURED DESTINATIONS ────────────────────────────────────────────────────
-function FeaturedDestinations({ t, theme }) {
+function FeaturedDestinations({ t }) {
 	const featured = [
 		{
 			name: t.destinations.items[0].name,
 			tagline: t.destinations.items[0].tagline,
 			price: '$65',
-			image: '/assets/Bocas-del-toro-1.jpg',
+			image: '/assets/Bocas-del-toro-3.jpg',
 			badge: t.destinations.items[0].badge,
+			layout: 'tall',
 		},
 		{
 			name: t.destinations.items[1].name,
@@ -461,33 +630,49 @@ function FeaturedDestinations({ t, theme }) {
 			price: '$40',
 			image: '/assets/tips-valle-de-anton-panama.jpg',
 			badge: t.destinations.items[1].badge,
+			layout: 'compact',
 		},
 		{
 			name: t.destinations.items[2].name,
 			tagline: t.destinations.items[2].tagline,
 			price: '$55',
-			image: '/assets/Panama-City.jpg',
+			image: '/assets/Panama-City-11.jpg',
 			badge: t.destinations.items[2].badge,
+			layout: 'wide',
+		},
+		{
+			name: t.destinations.items[3].name,
+			tagline: t.destinations.items[3].tagline,
+			price: '$40',
+			image: '/assets/Bocas-del-toro-1.jpg',
+			badge: t.destinations.items[3].badge,
+			layout: 'compact',
 		},
 	];
 
 	return (
-		<section id="destinations" className={`py-20 ${theme === 'dark' ? 'bg-[#121212]' : 'bg-gray-50'}`}>
+		<section id="destinations" className="bg-[#f4ecdf] py-20">
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 				<FadeIn className="text-center mb-14">
-					<span className="text-brand-red text-sm font-bold uppercase tracking-widest">{t.destinations.tag}</span>
-					<h2 className={`font-display text-5xl mt-2 ${theme === 'dark' ? 'text-white' : 'text-brand-black'}`}>{t.destinations.title}</h2>
-					<p className="text-gray-500 mt-3 max-w-xl mx-auto">{t.destinations.subtitle}</p>
+					<span className="text-sm font-bold uppercase tracking-[0.24em] text-[#a2552f]">{t.destinations.tag}</span>
+					<h2 className="mt-3 font-display text-5xl text-[#18231f] sm:text-6xl">{t.destinations.title}</h2>
+					<p className="mx-auto mt-4 max-w-2xl text-lg leading-8 text-[#66726e]">{t.destinations.subtitle}</p>
 				</FadeIn>
 
-				<div className="grid md:grid-cols-3 gap-6">
+				<div className="grid gap-6 lg:grid-cols-12 lg:grid-rows-[320px_280px]">
 					{featured.map((dest, i) => (
 						<FadeIn key={dest.name} delay={i * 0.15}>
 							<a
 								href="https://wa.me/50769255088"
 								target="_blank"
 								rel="noopener noreferrer"
-								className="dest-card block rounded-3xl overflow-hidden h-[480px] relative cursor-pointer group"
+								className={`dest-card group relative block overflow-hidden rounded-[2rem] cursor-pointer ${
+									dest.layout === 'tall'
+										? 'h-[520px] lg:col-span-5 lg:row-span-2 lg:h-full'
+										: dest.layout === 'wide'
+											? 'h-[300px] lg:col-span-7 lg:h-full'
+											: 'h-[260px] lg:col-span-3 lg:h-full'
+								}`}
 							>
 								<img
 									src={dest.image}
@@ -499,19 +684,21 @@ function FeaturedDestinations({ t, theme }) {
 									{dest.badge}
 								</div>
 								{/* Price pill */}
-								<div className="absolute top-5 right-5 z-10 bg-white/15 backdrop-blur-md border border-white/30 text-white text-lg font-black px-4 py-2 rounded-full">
+								<div className="absolute top-5 right-5 z-10 rounded-full border border-white/30 bg-white/15 px-4 py-2 text-lg font-black text-white backdrop-blur-md">
 									{dest.price}
 								</div>
 								{/* Bottom content */}
 								<div className="absolute bottom-0 left-0 right-0 z-10 p-7">
-									<h3 className="font-display text-4xl text-white text-shadow-lg leading-none mb-1">
+									<h3 className={`font-display leading-none text-white text-shadow-lg ${
+										dest.layout === 'wide' ? 'mb-2 text-5xl' : 'mb-2 text-4xl'
+									}`}>
 										{dest.name}
 									</h3>
-									<p className="text-gray-200 text-sm mb-5">
+									<p className={`text-[#efe7df] ${dest.layout === 'compact' ? 'mb-4 text-xs leading-5' : 'mb-5 text-sm leading-6'}`}>
 										{dest.tagline}
 									</p>
-									<div className="flex items-center gap-2 text-white/90 text-sm font-semibold group-hover:text-[#25D366] transition-colors">
-										<WhatsAppIcon size={16} />
+									<div className="flex items-center gap-2 text-sm font-semibold text-white/90 transition-colors group-hover:text-[#f7d7b3]">
+										<MapPin size={16} />
 										{t.destinations.book}
 										<ArrowRight
 											size={14}
@@ -531,106 +718,108 @@ function FeaturedDestinations({ t, theme }) {
 // ─── PRICES / ALL DESTINATIONS ────────────────────────────────────────────────
 function PricesSection({ t }) {
 	const destinations = [
-		{ name: t.destinations.items[2].name, price: 55, icon: '🏙️', popular: false },
-		{ name: 'Boquete', price: 35, icon: '⛰️', popular: true },
-		{ name: 'David', price: 30, icon: '🏘️', popular: false },
-		{ name: t.destinations.items[1].name, price: 40, icon: '🌋', popular: false },
-		{ name: 'Playa Venado', price: 40, icon: '🏖️', popular: false },
-		{ name: t.destinations.items[0].name, price: 65, icon: '🏝️', popular: true },
+		{ name: t.destinations.items[0].name, price: 65, icon: '🏝️', popular: true, note: t.prices.routeNotes.bocas },
+		{ name: 'Boquete', price: 35, icon: '⛰️', popular: true, note: t.prices.routeNotes.boquete },
+		{ name: t.destinations.items[3].name, price: 40, icon: '⛵', popular: false, note: t.prices.routeNotes.bocaChica },
+		{ name: t.destinations.items[1].name, price: 40, icon: '🌋', popular: false, note: t.prices.routeNotes.valle },
+		{ name: t.destinations.items[2].name, price: 55, icon: '🏙️', popular: false, note: t.prices.routeNotes.city },
+		{ name: 'David', price: 30, icon: '🏘️', popular: false, note: t.prices.routeNotes.david },
 	];
 
 	return (
-		<section id="prices" className="py-20 gradient-dark">
-			<div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+		<section id="prices" className="bg-[#18231f] py-20">
+			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 				<FadeIn className="text-center mb-14">
-					<span className="text-brand-red text-sm font-bold uppercase tracking-widest">
+					<span className="text-sm font-bold uppercase tracking-[0.24em] text-[#f0b06d]">
 						{t.prices.tag}
 					</span>
-					<h2 className="font-display text-5xl text-white mt-2">
+					<h2 className="mt-3 font-display text-5xl text-white sm:text-6xl">
 						{t.prices.title}
 					</h2>
-					<p className="text-gray-400 mt-3 max-w-xl mx-auto">
+					<p className="mx-auto mt-4 max-w-2xl text-lg leading-8 text-[#c0cbc6]">
 						{t.prices.subtitle}
 					</p>
 				</FadeIn>
 
 				<FadeIn delay={0.15}>
-					<div className="rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
-						{/* Header */}
-						<div className="bg-brand-red px-8 py-5 flex justify-between items-center">
-							<div className="flex items-center gap-3">
-								<Navigation size={20} className="text-white" />
-								<span className="text-white font-bold uppercase tracking-widest text-sm">
-									{t.prices.colDest}
-								</span>
+					<div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+						<div className="rounded-[2rem] border border-white/10 bg-white/5 p-8 shadow-[0_25px_80px_rgba(0,0,0,0.24)] backdrop-blur-sm">
+							<p className="text-xs font-bold uppercase tracking-[0.22em] text-[#f0b06d]">
+								{t.prices.cardEyebrow}
+							</p>
+							<h3 className="mt-4 font-display text-5xl leading-none text-white">
+								{t.prices.cardTitle}
+							</h3>
+							<p className="mt-4 max-w-md text-base leading-7 text-[#c0cbc6]">
+								{t.prices.cardDesc}
+							</p>
+
+							<div className="mt-8 space-y-4">
+								<div className="rounded-[1.6rem] border border-white/10 bg-black/10 p-5">
+									<p className="text-xs font-bold uppercase tracking-[0.2em] text-[#f0b06d]">
+										{t.prices.shared}
+									</p>
+									<p className="mt-2 text-sm leading-6 text-[#d7dfdb]">
+										{t.prices.note} <strong className="text-white">{t.prices.noteStrong}</strong> {t.prices.noteExtra}
+									</p>
+								</div>
+								<div className="rounded-[1.6rem] border border-white/10 bg-black/10 p-5">
+									<p className="text-xs font-bold uppercase tracking-[0.2em] text-[#f0b06d]">
+										{t.prices.private}
+									</p>
+									<p className="mt-2 text-sm leading-6 text-[#d7dfdb]">
+										{t.prices.privateDesc}
+									</p>
+								</div>
 							</div>
-							<span className="text-white font-bold uppercase tracking-widest text-sm">
-								{t.prices.colPrice}
-							</span>
 						</div>
 
-						{/* Rows */}
-						<div className="bg-brand-black divide-y divide-white/5">
+						<div className="grid gap-4 sm:grid-cols-2">
 							{destinations.map((d, i) => (
-								<motion.a
-									key={d.name}
-									href="https://wa.me/50769255088"
-									target="_blank"
-									rel="noopener noreferrer"
-									className="price-row flex items-center justify-between px-8 py-5 group cursor-pointer"
-									initial={{ opacity: 0, x: -20 }}
-									whileInView={{ opacity: 1, x: 0 }}
-									viewport={{ once: true }}
-									transition={{ delay: i * 0.07 }}
-								>
-									<div className="flex items-center gap-4">
-										<span className="text-2xl">
-											{d.icon}
-										</span>
-										<div>
-											<span className="text-white font-semibold text-lg group-hover:text-brand-red transition-colors">
-												{d.name}
-											</span>
-											{d.popular && (
-												<span className="ml-3 text-xs bg-brand-red/20 text-brand-red border border-brand-red/30 px-2 py-0.5 rounded-full font-semibold">
-													{t.prices.popular}
-												</span>
-											)}
+								<FadeIn key={d.name} delay={i * 0.06}>
+									<a
+										href="#contact"
+										className="group block rounded-[1.8rem] border border-white/10 bg-[#101916] p-6 shadow-[0_18px_50px_rgba(0,0,0,0.18)] transition-all duration-300 hover:-translate-y-1 hover:border-[#f0b06d]/30"
+									>
+										<div className="flex items-start justify-between gap-4">
+											<div className="flex items-start gap-4">
+												<div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#f0b06d]/10 text-2xl">
+													{d.icon}
+												</div>
+												<div>
+													<div className="flex items-center gap-2">
+														<h4 className="text-xl font-bold text-white">{d.name}</h4>
+														{d.popular && (
+															<span className="rounded-full border border-brand-red/30 bg-brand-red/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#ffb1a8]">
+																{t.prices.popular}
+															</span>
+														)}
+													</div>
+													<p className="mt-2 text-sm leading-6 text-[#afbbb5]">{d.note}</p>
+												</div>
+											</div>
+											<div className="text-right">
+												<div className="text-3xl font-black text-white">${d.price}</div>
+												<div className="mt-2 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#f0b06d]">
+													{t.prices.viewRoute}
+													<ArrowRight size={13} className="transition-transform group-hover:translate-x-1" />
+												</div>
+											</div>
 										</div>
-									</div>
-									<div className="flex items-center gap-4">
-										<span className="text-white font-black text-2xl">
-											${d.price}
-										</span>
-										<div className="w-8 h-8 rounded-full bg-[#25D366]/10 border border-[#25D366]/30 flex items-center justify-center group-hover:bg-[#25D366] transition-colors">
-											<WhatsAppIcon size={14} />
-										</div>
-									</div>
-								</motion.a>
+									</a>
+								</FadeIn>
 							))}
-						</div>
-
-						{/* Footer note */}
-						<div className="bg-white/5 px-8 py-4 flex items-center gap-3">
-							<Clock size={16} className="text-brand-red" />
-							<span className="text-gray-400 text-sm">
-								{t.prices.note}{' '}
-								<strong className="text-white">{t.prices.noteStrong}</strong>{' '}
-								{t.prices.noteExtra}
-							</span>
 						</div>
 					</div>
 				</FadeIn>
 
 				<FadeIn delay={0.3} className="mt-8 text-center">
 					<a
-						href="https://wa.me/50769255088"
-						target="_blank"
-						rel="noopener noreferrer"
-						className="btn-whatsapp text-lg mx-auto"
+						href="#contact"
+						className="inline-flex items-center justify-center gap-2 rounded-full bg-[#f0b06d] px-8 py-4 text-base font-bold uppercase tracking-[0.18em] text-[#18231f] transition-transform duration-300 hover:-translate-y-0.5"
 					>
-						<WhatsAppIcon size={22} />
 						{t.prices.cta}
+						<ArrowRight size={16} />
 					</a>
 				</FadeIn>
 			</div>
@@ -639,7 +828,7 @@ function PricesSection({ t }) {
 }
 
 // ─── VEHICLE SHOWCASE ─────────────────────────────────────────────────────────
-function VehicleShowcase({ t, theme }) {
+function VehicleShowcase({ t }) {
 	const features = [
 		{ icon: <Shield size={20} />, text: t.vehicle.features[0] },
 		{ icon: <Wifi size={20} />, text: t.vehicle.features[1] },
@@ -650,15 +839,15 @@ function VehicleShowcase({ t, theme }) {
 	];
 
 	return (
-		<section id="vehicle" className={`py-20 overflow-hidden ${theme === 'dark' ? 'bg-brand-black' : 'bg-white'}`}>
+		<section id="vehicle" className="overflow-hidden bg-[#fffaf4] py-20">
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 				<div className="grid lg:grid-cols-2 gap-16 items-center">
 					{/* Text side */}
 					<FadeIn direction="left">
-						<span className="text-brand-red text-sm font-bold uppercase tracking-widest">
+						<span className="text-sm font-bold uppercase tracking-[0.24em] text-[#a2552f]">
 							{t.vehicle.tag}
 						</span>
-						<h2 className={`font-display text-5xl mt-2 mb-5 ${theme === 'dark' ? 'text-white' : 'text-brand-black'}`}>
+						<h2 className="mt-3 mb-5 font-display text-5xl text-[#18231f] sm:text-6xl">
 							{t.vehicle.title1}
 							<br />
 							<span className="text-brand-red">{t.vehicle.title2}</span>{' '}
@@ -666,16 +855,16 @@ function VehicleShowcase({ t, theme }) {
 							<br />
 							{t.vehicle.title3}
 						</h2>
-						<p className="text-gray-600 mb-8 leading-relaxed text-lg">
+						<p className="mb-8 text-lg leading-8 text-[#66726e]">
 							{t.vehicle.desc}
 						</p>
 						<div className="grid grid-cols-2 gap-3 mb-8">
 							{features.map(f => (
 								<div
-									key={f.text}
-									className="flex items-center gap-3 text-gray-700"
+								key={f.text}
+									className="flex items-center gap-3 text-[#4e5e58]"
 								>
-									<div className="w-8 h-8 bg-brand-red/10 rounded-lg flex items-center justify-center text-brand-red flex-shrink-0">
+									<div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-[#f0e5d9] text-[#b85e34]">
 										{f.icon}
 									</div>
 									<span className="text-sm font-medium">
@@ -685,13 +874,11 @@ function VehicleShowcase({ t, theme }) {
 							))}
 						</div>
 						<a
-							href="https://wa.me/50769255088"
-							target="_blank"
-							rel="noopener noreferrer"
+							href="#contact"
 							className="btn-primary"
 						>
-							<WhatsAppIcon size={20} />
 							{t.vehicle.cta}
+							<ArrowRight size={18} />
 						</a>
 					</FadeIn>
 
@@ -699,7 +886,7 @@ function VehicleShowcase({ t, theme }) {
 					<FadeIn direction="right">
 						<div className="relative">
 							{/* Main van image */}
-							<div className="relative rounded-3xl overflow-hidden shadow-2xl">
+							<div className="relative overflow-hidden rounded-[2rem] border border-[#eadfd4] shadow-[0_24px_70px_rgba(40,28,16,0.12)]">
 								<img
 									src="/assets/carro.png"
 									alt="Méndez Transport Toyota HiAce"
@@ -716,7 +903,7 @@ function VehicleShowcase({ t, theme }) {
 							</div>
 
 							{/* Interior/rear image */}
-							<div className="mt-4 rounded-2xl overflow-hidden shadow-xl relative">
+							<div className="relative mt-4 overflow-hidden rounded-[1.6rem] border border-[#eadfd4] shadow-[0_18px_50px_rgba(40,28,16,0.10)]">
 								<img
 									src="/assets/f4bc0dee-5102-4474-9b16-911fcaeabfa7.jpg"
 									alt="Van interior ready for tourists"
@@ -754,70 +941,40 @@ function VehicleShowcase({ t, theme }) {
 	);
 }
 
-// ─── BANNER SECTION ───────────────────────────────────────────────────────────
-function BannerSection({ t }) {
+// ─── JOURNEY SECTION ──────────────────────────────────────────────────────────
+function JourneySection({ t }) {
+	const icons = [<MapPin size={20} />, <Calendar size={20} />, <Luggage size={20} />];
+
 	return (
-		<section className="py-16 gradient-dark overflow-hidden relative">
-			{/* Background Bocas image */}
-			<div className="absolute inset-0">
-				<img
-					src="/assets/Bocas-del-toro-3.jpg"
-					alt=""
-					className="w-full h-full object-cover opacity-10"
-				/>
-			</div>
+		<section id="journey" className="bg-[#fffaf4] py-20">
+			<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+				<FadeIn className="mx-auto max-w-3xl text-center">
+					<span className="text-sm font-bold uppercase tracking-[0.24em] text-[#a2552f]">
+						{t.journey.tag}
+					</span>
+					<h2 className="mt-3 font-display text-5xl text-[#18231f] sm:text-6xl">
+						{t.journey.title}
+					</h2>
+					<p className="mt-4 text-lg leading-8 text-[#66726e]">
+						{t.journey.subtitle}
+					</p>
+				</FadeIn>
 
-			<div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-				<div className="grid lg:grid-cols-3 gap-8 items-center">
-					{/* Left - Main CTA */}
-					<FadeIn direction="left" className="lg:col-span-2">
-						<div className="glass rounded-3xl p-10">
-							<h2 className="font-display text-6xl text-white mb-4 leading-none">
-								{t.cta.title1}
-								<br />
-								<span className="text-brand-red">
-									{t.cta.title2}
-								</span>
-								<br />
-								{t.cta.title3}
-							</h2>
-							<p className="text-gray-300 text-lg mb-8 max-w-lg">
-								{t.cta.desc}
-							</p>
-							<div className="flex flex-col sm:flex-row gap-4">
-								<a
-									href="https://wa.me/50769255088"
-									target="_blank"
-									rel="noopener noreferrer"
-									className="btn-whatsapp text-lg"
-								>
-									<WhatsAppIcon size={22} />
-									+507 6925-5088
-								</a>
-								<a
-									href="https://wa.me/50768768467"
-									target="_blank"
-									rel="noopener noreferrer"
-									className="btn-whatsapp text-lg"
-								>
-									<WhatsAppIcon size={22} />
-									+507 6876-8467
-								</a>
+				<div className="mt-12 grid gap-6 lg:grid-cols-3">
+					{t.journey.items.map((item, index) => (
+						<FadeIn key={item.title} delay={index * 0.1}>
+							<div className="h-full rounded-[2rem] border border-[#ebdfd4] bg-white p-8 shadow-[0_18px_50px_rgba(46,34,14,0.06)]">
+								<div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#f5ede3] text-[#9b532e]">
+									{icons[index]}
+								</div>
+								<div className="mt-6 text-xs font-bold uppercase tracking-[0.24em] text-[#b08968]">
+									0{index + 1}
+								</div>
+								<h3 className="mt-3 text-2xl font-bold text-[#18231f]">{item.title}</h3>
+								<p className="mt-3 text-base leading-7 text-[#66726e]">{item.desc}</p>
 							</div>
-						</div>
-					</FadeIn>
-
-					{/* Right - Logo mascot */}
-					<FadeIn direction="right">
-						<div className="relative mx-auto max-w-xs flex items-center justify-center">
-							<div className="absolute inset-0 bg-brand-red/20 blur-3xl rounded-full" />
-							<img
-								src="/assets/mascotas.png"
-								alt="Méndez Transport"
-								className="relative w-full drop-shadow-2xl"
-							/>
-						</div>
-					</FadeIn>
+						</FadeIn>
+					))}
 				</div>
 			</div>
 		</section>
@@ -825,7 +982,7 @@ function BannerSection({ t }) {
 }
 
 // ─── BUSINESS CARD SECTION ────────────────────────────────────────────────────
-function BusinessCardSection({ paidView = false, t, theme }) {
+function BusinessCardSection({ paidView = false, t }) {
 	const firstPreviewImage = paidView
 		? '/assets/mis-assets/Tarjeta_4k.png'
 		: '/assets/Panama-City.jpg';
@@ -834,16 +991,16 @@ function BusinessCardSection({ paidView = false, t, theme }) {
 		: '/assets/tips-valle-de-anton-panama.jpg';
 
 	return (
-		<section className={`py-20 ${theme === 'dark' ? 'bg-[#121212]' : 'bg-gray-50'}`}>
+		<section className="bg-[#f7efe4] py-20">
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 				<FadeIn className="text-center mb-14">
-					<span className="text-brand-red text-sm font-bold uppercase tracking-widest">
+					<span className="text-sm font-bold uppercase tracking-[0.24em] text-[#a2552f]">
 						{t.contact.tag}
 					</span>
-					<h2 className={`font-display text-5xl mt-2 ${theme === 'dark' ? 'text-white' : 'text-brand-black'}`}>
+					<h2 className="mt-3 font-display text-5xl text-[#18231f] sm:text-6xl">
 						{t.contact.title}
 					</h2>
-					<p className="text-gray-500 mt-3 max-w-xl mx-auto">
+					<p className="mx-auto mt-4 max-w-2xl text-lg leading-8 text-[#66726e]">
 						{t.contact.subtitle}
 					</p>
 				</FadeIn>
@@ -855,7 +1012,7 @@ function BusinessCardSection({ paidView = false, t, theme }) {
 							<motion.div
 								whileHover={{ scale: 1.02, rotate: -1 }}
 								transition={{ type: 'spring', stiffness: 300 }}
-								className="rounded-2xl overflow-hidden shadow-2xl cursor-pointer"
+								className="cursor-pointer overflow-hidden rounded-[1.8rem] border border-[#eadfd4] shadow-[0_24px_70px_rgba(40,28,16,0.10)]"
 							>
 								<img
 									src={firstPreviewImage}
@@ -866,7 +1023,7 @@ function BusinessCardSection({ paidView = false, t, theme }) {
 							<motion.div
 								whileHover={{ scale: 1.02, rotate: 1 }}
 								transition={{ type: 'spring', stiffness: 300 }}
-								className="rounded-2xl overflow-hidden shadow-2xl cursor-pointer"
+								className="cursor-pointer overflow-hidden rounded-[1.8rem] border border-[#eadfd4] shadow-[0_24px_70px_rgba(40,28,16,0.10)]"
 							>
 								<img
 									src={secondPreviewImage}
@@ -879,66 +1036,48 @@ function BusinessCardSection({ paidView = false, t, theme }) {
 
 					{/* QR + Contact info */}
 					<FadeIn direction="right">
-						<div className="bg-brand-black rounded-3xl p-8 text-center">
-							<MendezLogo
-								size={48}
-								showText={true}
-								dark={false}
-							/>
-							<div className="mt-8 flex justify-center">
-								<WhatsAppQR
-									url="https://wa.me/50769255088"
-									size={180}
-									label={t.contact.scan}
-									showExportButton={true}
-									pdfTitle="Mendez Transport WhatsApp QR"
-									exportLabel={t.contact.exportQr}
-								/>
+						<div className="rounded-[2rem] border border-[#eadfd4] bg-[#fffaf4] p-8 text-left shadow-[0_24px_70px_rgba(40,28,16,0.08)]">
+							<div className="inline-flex rounded-full border border-[#decfbe] bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-[#a35d37]">
+								{t.contact.tag}
 							</div>
+							<h3 className="mt-5 font-display text-5xl leading-none text-[#18231f]">
+								{t.contact.title}
+							</h3>
+							<p className="mt-4 max-w-md text-base leading-7 text-[#66726e]">
+								{t.contact.subtitle}
+							</p>
 
-							<div className="mt-8 space-y-3">
+							<div className="mt-8 grid gap-3">
 								<a
 									href="https://wa.me/50769255088"
 									target="_blank"
 									rel="noopener noreferrer"
-									className="flex items-center justify-center gap-3 bg-[#25D366]/10 hover:bg-[#25D366]/20 border border-[#25D366]/30 rounded-xl py-3 px-5 transition-colors group"
+									className="inline-flex items-center justify-center gap-3 rounded-full bg-[#18231f] px-6 py-4 text-sm font-bold uppercase tracking-[0.18em] text-white transition-transform duration-300 hover:-translate-y-0.5"
 								>
 									<WhatsAppIcon size={20} />
-									<span className="text-white font-semibold">
-										+507 6925-5088
-									</span>
+									<span>{t.contact.primary}</span>
 								</a>
 								<a
-									href="https://wa.me/50768768467"
-									target="_blank"
-									rel="noopener noreferrer"
-									className="flex items-center justify-center gap-3 bg-[#25D366]/10 hover:bg-[#25D366]/20 border border-[#25D366]/30 rounded-xl py-3 px-5 transition-colors group"
+									href="tel:+50769255088"
+									className="inline-flex items-center justify-center gap-3 rounded-full border border-[#18231f]/12 bg-white px-6 py-4 text-sm font-bold uppercase tracking-[0.18em] text-[#18231f] transition-colors duration-300 hover:bg-[#f7f1ea]"
 								>
-									<WhatsAppIcon size={20} />
-									<span className="text-white font-semibold">
-										+507 6876-8467
-									</span>
+									<Phone size={18} />
+									<span>{t.contact.secondary}</span>
 								</a>
 							</div>
 
-							<div className="mt-4 flex items-center justify-center gap-4 pt-4 border-t border-white/10">
-								<a
-									href="https://instagram.com/blady_507"
-									target="_blank"
-									rel="noopener noreferrer"
-									className="flex items-center gap-2 text-gray-400 hover:text-pink-400 transition-colors text-sm"
-								>
-									<Instagram size={16} />
-									@blady_507
-								</a>
-								<span className="text-gray-700">·</span>
-								<a
-									href="/banners"
-									className="flex items-center gap-2 text-gray-400 hover:text-blue-400 transition-colors text-sm"
-								>
-									<Globe size={16} />
-									Banners
-								</a>
+							<div className="mt-8 rounded-[1.6rem] border border-[#eadfd4] bg-white p-6">
+								<p className="text-xs font-bold uppercase tracking-[0.22em] text-[#a35d37]">
+									{t.contact.supportTitle}
+								</p>
+								<div className="mt-4 space-y-3">
+									{t.contact.supportItems.map((item) => (
+										<div key={item} className="flex items-start gap-3 text-[#50605a]">
+											<CheckCircle size={18} className="mt-1 text-brand-red" />
+											<span className="text-sm leading-6">{item}</span>
+										</div>
+									))}
+								</div>
 							</div>
 						</div>
 					</FadeIn>
@@ -951,27 +1090,23 @@ function BusinessCardSection({ paidView = false, t, theme }) {
 function LandingPage({
 	paidView = false,
 	t,
-	theme,
 	language,
 	setLanguage,
-	setTheme,
 }) {
 	return (
-		<div className={`min-h-screen ${theme === 'dark' ? 'bg-brand-black' : 'bg-white'}`}>
+		<div className="min-h-screen bg-[#fffaf4]">
 			<Navbar
 				t={t}
 				language={language}
 				setLanguage={setLanguage}
-				theme={theme}
-				setTheme={setTheme}
 			/>
-			<Hero paidView={paidView} />
-			<Benefits t={t} theme={theme} />
-			<FeaturedDestinations t={t} theme={theme} />
+			<Hero paidView={paidView} t={t} />
+			<Benefits t={t} />
+			<FeaturedDestinations t={t} />
 			<PricesSection t={t} />
-			<VehicleShowcase t={t} theme={theme} />
-			<BannerSection t={t} />
-			<BusinessCardSection paidView={paidView} t={t} theme={theme} />
+			<JourneySection t={t} />
+			<VehicleShowcase t={t} />
+			<BusinessCardSection paidView={paidView} t={t} />
 			<ContactSection t={t} />
 			<Footer t={t} />
 		</div>
@@ -1038,98 +1173,82 @@ function ContactSection({ t }) {
 	return (
 		<section
 			id="contact"
-			className="py-20 bg-brand-black relative overflow-hidden"
+			className="relative overflow-hidden bg-[#18231f] py-20"
 		>
-			{/* Background decoration */}
 			<div className="absolute inset-0 pointer-events-none">
-				<div className="absolute top-0 left-1/4 w-96 h-96 bg-brand-red/5 rounded-full blur-3xl" />
-				<div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl" />
+				<div className="absolute left-0 top-0 h-96 w-96 rounded-full bg-brand-red/10 blur-3xl" />
+				<div className="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-[#0f7462]/15 blur-3xl" />
 			</div>
 
-			<div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-				<FadeIn>
-					<span className="text-brand-red text-sm font-bold uppercase tracking-widest">
-						{t.contact.tag2}
-					</span>
-					<h2 className="font-display text-6xl text-white mt-2 mb-4">
-						{t.contact.title2}
-						<br />
-						<span className="text-brand-red">{t.contact.span2}</span>
-					</h2>
-					<p className="text-gray-400 text-xl mb-12 max-w-2xl mx-auto">
-						{t.contact.desc2}
-					</p>
-				</FadeIn>
+			<div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+				<div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+					<FadeIn>
+						<span className="text-sm font-bold uppercase tracking-[0.22em] text-[#f0b06d]">
+							{t.contact.tag2}
+						</span>
+						<h2 className="mt-3 font-display text-5xl text-white sm:text-6xl">
+							{t.contact.title2}
+							<span className="block text-brand-red">{t.contact.span2}</span>
+						</h2>
+						<p className="mt-5 max-w-xl text-lg leading-8 text-[#c0cbc6]">
+							{t.contact.desc2}
+						</p>
+					</FadeIn>
 
-				{/* Large QR */}
-				<FadeIn delay={0.2} className="flex justify-center mb-12">
-					<div className="relative">
-						<div className="absolute inset-0 bg-[#25D366]/10 blur-3xl rounded-full scale-150" />
-						<WhatsAppQR
-							url="https://wa.me/50769255088"
-							size={220}
-							label={t.contact.scanBook}
-							showExportButton={true}
-							pdfTitle="Mendez Transport Booking QR"
-							exportLabel={t.contact.exportQr}
-						/>
-					</div>
-				</FadeIn>
+					<FadeIn delay={0.2}>
+						<div className="rounded-[2rem] border border-white/10 bg-white/5 p-8 backdrop-blur-sm">
+							<div className="grid gap-4 sm:grid-cols-2">
+								<a
+									href="https://wa.me/50769255088"
+									target="_blank"
+									rel="noopener noreferrer"
+									className="inline-flex items-center justify-center gap-3 rounded-full bg-[#25D366] px-6 py-4 text-sm font-bold uppercase tracking-[0.18em] text-[#0f2719] transition-transform duration-300 hover:-translate-y-0.5"
+								>
+									<WhatsAppIcon size={20} />
+									{t.contact.primary}
+								</a>
+								<a
+									href="tel:+50769255088"
+									className="inline-flex items-center justify-center gap-3 rounded-full border border-white/15 bg-white/8 px-6 py-4 text-sm font-bold uppercase tracking-[0.18em] text-white transition-colors duration-300 hover:bg-white/12"
+								>
+									<Phone size={18} />
+									{t.contact.secondary}
+								</a>
+							</div>
 
-				{/* Two WhatsApp buttons */}
-				<FadeIn delay={0.3}>
-					<div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-						<a
-							href="https://wa.me/50769255088"
-							target="_blank"
-							rel="noopener noreferrer"
-							className="btn-whatsapp text-xl py-5 px-10"
-						>
-							<WhatsAppIcon size={26} />
-							+507 6925-5088
-						</a>
-						<a
-							href="https://wa.me/50768768467"
-							target="_blank"
-							rel="noopener noreferrer"
-							className="btn-whatsapp text-xl py-5 px-10"
-						>
-							<WhatsAppIcon size={26} />
-							+507 6876-8467
-						</a>
-					</div>
-				</FadeIn>
+							<div className="mt-8 grid gap-4 sm:grid-cols-3">
+								{t.contact.supportItems.map((item) => (
+									<div
+										key={item}
+										className="rounded-[1.5rem] border border-white/10 bg-black/10 p-5 text-sm leading-6 text-[#d7dfdb]"
+									>
+										<CheckCircle size={18} className="mb-3 text-[#f0b06d]" />
+										{item}
+									</div>
+								))}
+							</div>
 
-				{/* Social links */}
-				<FadeIn delay={0.4}>
-					<div className="flex items-center justify-center gap-6 text-gray-500">
-						<a
-							href="https://instagram.com/blady_507"
-							target="_blank"
-							rel="noopener noreferrer"
-							className="flex items-center gap-2 hover:text-pink-400 transition-colors font-medium"
-						>
-							<Instagram size={20} />
-							@blady_507
-						</a>
-						<span>·</span>
-						<a
-							href="/banners"
-							className="flex items-center gap-2 hover:text-blue-400 transition-colors font-medium"
-						>
-							<Globe size={20} />
-							Banners
-						</a>
-						<span>·</span>
-						<a
-							href="tel:+50769255088"
-							className="flex items-center gap-2 hover:text-brand-red transition-colors font-medium"
-						>
-							<Phone size={20} />
-							{t.nav.contact}
-						</a>
-					</div>
-				</FadeIn>
+							<div className="mt-8 flex flex-wrap items-center gap-5 text-sm text-[#b5c0bb]">
+								<a
+									href="https://instagram.com/blady_507"
+									target="_blank"
+									rel="noopener noreferrer"
+									className="flex items-center gap-2 transition-colors hover:text-white"
+								>
+									<Instagram size={18} />
+									@blady_507
+								</a>
+								<a
+									href="tel:+50769255088"
+									className="flex items-center gap-2 transition-colors hover:text-white"
+								>
+									<Phone size={18} />
+									+507 6925-5088
+								</a>
+							</div>
+						</div>
+					</FadeIn>
+				</div>
 			</div>
 		</section>
 	);
@@ -1178,6 +1297,12 @@ function Footer({ t }) {
 						>
 							<Phone size={18} />
 						</a>
+						<a
+							href="/mis-assets"
+							className="rounded-full border border-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-gray-500 transition-colors hover:border-white/20 hover:text-gray-300"
+						>
+							{t.footer.clientAccess}
+						</a>
 					</div>
 				</div>
 
@@ -1194,9 +1319,6 @@ export default function App() {
 	const [language, setLanguage] = useState(
 		() => window.localStorage.getItem('lang_pref') || 'es'
 	);
-	const [theme, setTheme] = useState(
-		() => window.localStorage.getItem('theme_pref') || 'dark'
-	);
 	const [paidViewAuthenticated, setPaidViewAuthenticated] = useState(() =>
 		window.sessionStorage.getItem('paid_view_access') === 'granted'
 	);
@@ -1206,9 +1328,6 @@ export default function App() {
 		window.localStorage.setItem('lang_pref', language);
 	}, [language]);
 
-	useEffect(() => {
-		window.localStorage.setItem('theme_pref', theme);
-	}, [theme]);
 	const bannerPreview = bannerConfigByRoute[window.location.pathname];
 	if (bannerPreview) {
 		return <BannerAssetPreview config={bannerPreview} />;
@@ -1252,10 +1371,8 @@ export default function App() {
 			<LandingPage
 				paidView={true}
 				t={t}
-				theme={theme}
 				language={language}
 				setLanguage={setLanguage}
-				setTheme={setTheme}
 			/>
 		);
 	}
@@ -1265,10 +1382,8 @@ export default function App() {
 			<LandingPage
 				paidView={false}
 				t={t}
-				theme={theme}
 				language={language}
 				setLanguage={setLanguage}
-				setTheme={setTheme}
 			/>
 		);
 	}
@@ -1277,10 +1392,8 @@ export default function App() {
 		<LandingPage
 			paidView={false}
 			t={t}
-			theme={theme}
 			language={language}
 			setLanguage={setLanguage}
-			setTheme={setTheme}
 		/>
 	);
 }

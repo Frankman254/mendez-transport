@@ -5,9 +5,30 @@ export const translations = {
       prices: 'Prices',
       vehicle: 'Vehicle',
       contact: 'Contact',
+      journey: 'How It Works',
       assets: 'My Assets',
       bookNow: 'Book Now',
       bookWA: 'Book on WhatsApp',
+      clientAccess: 'Client Access',
+    },
+    hero: {
+      eyebrow: 'Shuttle Travel Across Panama',
+      title1: 'Move Through Panama',
+      title2: 'Like Your Trip Already Started',
+      subtitle:
+        'Comfortable transfers for travelers heading to Bocas del Toro, Boquete, El Valle and Panama City, with a smoother and more human booking experience.',
+      primary: 'Plan My Transfer',
+      secondary: 'See Routes',
+      cardTitle: 'Popular routes',
+      cardNote: 'Shared departures and private service available on request.',
+      highlights: [
+        'Daily departures',
+        'Comfortable vehicle',
+        'Tourist-friendly service',
+      ],
+      paidBadge: 'Premium access',
+      paidDesc:
+        'This view keeps the same polished visual language as the public site while showcasing the client-only materials in a more curated composition.',
     },
     benefits: {
       tag: 'Why Choose Us',
@@ -29,6 +50,7 @@ export const translations = {
         { name: 'Bocas del Toro', tagline: 'Turquoise waters & island paradise', badge: 'Most Popular' },
         { name: 'El Valle de Antón', tagline: 'Volcanic crater, waterfalls & nature', badge: 'Nature Escape' },
         { name: 'Panama City', tagline: 'Skyline, canal & urban culture', badge: 'City Vibes' },
+        { name: 'Boca Chica', tagline: 'Pacific coast, islands & calm seaside escapes', badge: 'Coastal Escape' },
       ],
     },
     prices: {
@@ -42,6 +64,22 @@ export const translations = {
       noteStrong: '7:40 AM',
       noteExtra: '· Private transport available upon request',
       cta: 'Reserve Your Seat Now',
+      cardEyebrow: 'Travel menu',
+      cardTitle: 'Choose the route that fits your trip',
+      cardDesc: 'Indicative fares for some of our most requested destinations.',
+      shared: 'Shared shuttle',
+      private: 'Private on request',
+      privateDesc:
+        'Ideal if you are traveling with extra luggage, want more flexibility or prefer a more personalized departure.',
+      viewRoute: 'View route',
+      routeNotes: {
+        bocas: 'Caribbean favorite',
+        boquete: 'Highlands & coffee',
+        bocaChica: 'Pacific coast escape',
+        valle: 'Nature & waterfalls',
+        city: 'City connection',
+        david: 'Easy inland transfer',
+      },
     },
     vehicle: {
       tag: 'Our Vehicle',
@@ -68,22 +106,52 @@ export const translations = {
       title3: 'STARTS HERE',
       desc: "From the lush highlands of Boquete to the crystal lagoons of Bocas del Toro — Méndez Transport takes you there in comfort and style.",
     },
+    journey: {
+      tag: 'Easy Booking',
+      title: 'A CLEARER WAY TO RESERVE',
+      subtitle:
+        'The public site should feel like planning a trip, not using a tool. We guide travelers from route discovery to confirmation in a few calm steps.',
+      items: [
+        {
+          title: 'Choose your route',
+          desc: 'Review featured destinations, travel style and indicative pricing before contacting us.',
+        },
+        {
+          title: 'Confirm details',
+          desc: 'We help you choose schedule, meeting point, luggage space and whether shared or private transport fits best.',
+        },
+        {
+          title: 'Travel with confidence',
+          desc: 'Receive a direct confirmation and arrive ready for a smooth transfer experience.',
+        },
+      ],
+    },
     contact: {
-      tag: 'Always With You',
-      title: 'SAVE OUR CONTACT',
-      subtitle: 'Scan the QR code to open WhatsApp instantly or save our info for your trip.',
+      tag: 'Travel Support',
+      title: 'READY TO PLAN YOUR RIDE?',
+      subtitle: 'Contact us to confirm route, pickup and availability for your travel dates.',
       scan: 'Scan to open WhatsApp',
       exportQr: 'Export QR PNG',
       tag2: 'Get In Touch',
-      title2: 'RESERVE YOUR',
-      span2: 'SEAT TODAY',
-      desc2: "Don't miss your departure. Contact us on WhatsApp right now and confirm your spot for tomorrow's 7:40 AM shuttle.",
-      scanBook: 'Scan · Tap · Book',
+      title2: 'LET\'S ORGANIZE YOUR',
+      span2: 'NEXT TRANSFER',
+      desc2:
+        'Tell us where you are going, how many people are traveling and your preferred date. We will help you confirm the best option.',
+      scanBook: 'Quick contact',
+      primary: 'Write on WhatsApp',
+      secondary: 'Call us',
+      supportTitle: 'Before you book',
+      supportItems: [
+        'Ask about shared or private transport',
+        'Confirm luggage and pickup details',
+        'Check the best route for your trip',
+      ],
     },
     footer: {
       tagline: 'Shared or Private Transportation',
       daily: 'Daily Departure 7:40 AM',
       rights: 'All rights reserved',
+      clientAccess: 'Client portal',
     },
     assets: {
       portalTitle: 'Assets Portal',
@@ -118,9 +186,30 @@ export const translations = {
       prices: 'Precios',
       vehicle: 'Vehículo',
       contact: 'Contacto',
+      journey: 'Cómo funciona',
       assets: 'Mis Assets',
       bookNow: 'Reservar',
       bookWA: 'Reservar por WhatsApp',
+      clientAccess: 'Acceso cliente',
+    },
+    hero: {
+      eyebrow: 'Shuttle turístico por Panamá',
+      title1: 'Muévete por Panamá',
+      title2: 'como si el viaje ya hubiera empezado',
+      subtitle:
+        'Traslados cómodos para viajeros que van a Bocas del Toro, Boquete, El Valle y Ciudad de Panamá, con una experiencia de reserva más clara y humana.',
+      primary: 'Planear mi traslado',
+      secondary: 'Ver rutas',
+      cardTitle: 'Rutas favoritas',
+      cardNote: 'Salidas compartidas y servicio privado disponible bajo solicitud.',
+      highlights: [
+        'Salidas diarias',
+        'Vehículo cómodo',
+        'Atención para turistas',
+      ],
+      paidBadge: 'Acceso premium',
+      paidDesc:
+        'Esta vista conserva el mismo lenguaje visual cuidado de la web pública, pero presenta los materiales exclusivos del cliente en una composición más curada.',
     },
     benefits: {
       tag: 'Por qué elegirnos',
@@ -142,6 +231,7 @@ export const translations = {
         { name: 'Bocas del Toro', tagline: 'Aguas turquesas y paraíso tropical', badge: 'Más Popular' },
         { name: 'El Valle de Antón', tagline: 'Cráter volcánico, cascadas y naturaleza', badge: 'Escape Natural' },
         { name: 'Ciudad de Panamá', tagline: 'Skyline, canal y cultura urbana', badge: 'Vida Urbana' },
+        { name: 'Boca Chica', tagline: 'Costa pacífica, islas y escapadas frente al mar', badge: 'Escape Costero' },
       ],
     },
     prices: {
@@ -155,6 +245,22 @@ export const translations = {
       noteStrong: '7:40 AM',
       noteExtra: '· Transporte privado disponible bajo pedido',
       cta: 'Reservar Mi Lugar',
+      cardEyebrow: 'Menú de rutas',
+      cardTitle: 'Elige la ruta que mejor encaja con tu viaje',
+      cardDesc: 'Tarifas de referencia para algunos de nuestros destinos más solicitados.',
+      shared: 'Shuttle compartido',
+      private: 'Privado bajo solicitud',
+      privateDesc:
+        'Ideal si viajas con más equipaje, quieres flexibilidad o prefieres una salida más personalizada.',
+      viewRoute: 'Ver ruta',
+      routeNotes: {
+        bocas: 'Favorito del Caribe',
+        boquete: 'Tierras altas y café',
+        bocaChica: 'Escape en la costa pacífica',
+        valle: 'Naturaleza y cascadas',
+        city: 'Conexión con la ciudad',
+        david: 'Traslado interior sencillo',
+      },
     },
     vehicle: {
       tag: 'Nuestro Vehículo',
@@ -181,22 +287,52 @@ export const translations = {
       title3: 'EMPIEZA AQUÍ',
       desc: 'Desde las tierras altas de Boquete hasta las lagunas cristalinas de Bocas del Toro — Méndez Transport te lleva con comodidad y estilo.',
     },
+    journey: {
+      tag: 'Reserva simple',
+      title: 'UNA FORMA MÁS CLARA DE RESERVAR',
+      subtitle:
+        'La web pública debe sentirse como planear un viaje, no como usar una herramienta. Guiamos al viajero desde descubrir rutas hasta confirmar su traslado.',
+      items: [
+        {
+          title: 'Elige tu ruta',
+          desc: 'Revisa destinos destacados, tipo de servicio y precios de referencia antes de escribirnos.',
+        },
+        {
+          title: 'Confirma los detalles',
+          desc: 'Te ayudamos a elegir horario, punto de encuentro, equipaje y si te conviene transporte compartido o privado.',
+        },
+        {
+          title: 'Viaja con confianza',
+          desc: 'Recibes confirmación directa y llegas listo para un traslado cómodo y bien organizado.',
+        },
+      ],
+    },
     contact: {
-      tag: 'Siempre Contigo',
-      title: 'GUARDA NUESTRO CONTACTO',
-      subtitle: 'Escanea el código QR para abrir WhatsApp al instante o guarda nuestra información para tu viaje.',
+      tag: 'Asistencia de viaje',
+      title: 'LISTO PARA PLANEAR TU TRASLADO',
+      subtitle: 'Contáctanos para confirmar ruta, punto de salida y disponibilidad para tus fechas.',
       scan: 'Escanear para abrir WhatsApp',
       exportQr: 'Exportar QR PNG',
       tag2: 'Contáctanos',
-      title2: 'RESERVA TU',
-      span2: 'LUGAR HOY',
-      desc2: 'No pierdas tu salida. Contáctanos por WhatsApp ahora y confirma tu lugar para el shuttle de las 7:40 AM.',
-      scanBook: 'Escanea · Toca · Reserva',
+      title2: 'ORGANICEMOS TU',
+      span2: 'PRÓXIMO TRASLADO',
+      desc2:
+        'Cuéntanos hacia dónde vas, cuántas personas viajan y la fecha ideal. Te ayudamos a confirmar la mejor opción.',
+      scanBook: 'Contacto rápido',
+      primary: 'Escribir por WhatsApp',
+      secondary: 'Llamar',
+      supportTitle: 'Antes de reservar',
+      supportItems: [
+        'Consulta transporte compartido o privado',
+        'Confirma equipaje y punto de recogida',
+        'Valida la mejor ruta para tu viaje',
+      ],
     },
     footer: {
       tagline: 'Transporte Compartido o Privado',
       daily: 'Salida Diaria 7:40 AM',
       rights: 'Todos los derechos reservados',
+      clientAccess: 'Portal del cliente',
     },
     assets: {
       portalTitle: 'Portal de Assets',
