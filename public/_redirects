@@ -1,0 +1,10 @@
+## SPA routes (Netlify)
+## Vite/React app routes are handled client-side by `window.location.pathname`
+/mis-assets /index.html 200
+/vista-pagada /index.html 200
+/vista-muestra /index.html 200
+/banners /index.html 200
+/tarjeta-4k /index.html 200
+/banner-vertical /index.html 200
+/flyer /index.html 200
+/banner /index.html 200
