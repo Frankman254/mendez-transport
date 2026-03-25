@@ -22,9 +22,9 @@ export const bannerConfigs = [
 		orientation: 'vertical',
 		qr: {
 			// EDIT QR POSITION FOR Banner_oscuro_4k.png HERE
-			left: 74.95,
-			top: 78.75,
-			width: 19.45,
+			left: 74.55,
+			top: 80.25,
+			width: 22.52,
 			pixelSize: 160,
 			iconSize: 38,
 		},
