@@ -711,7 +711,7 @@ export default function PrintBanner() {
                 }}
               >
                 <Instagram size={17} color="#f9a8d4" />
-                <span style={{ fontSize: 15, fontWeight: 700, color: 'white' }}>@blady_507</span>
+                <span style={{ fontSize: 15, fontWeight: 700, color: 'white' }}>@jblady_507</span>
               </div>
             </div>
 

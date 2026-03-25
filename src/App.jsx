@@ -1256,13 +1256,13 @@ function ContactSection({ t }) {
 
 							<div className="mt-8 flex flex-wrap items-center gap-5 text-sm text-[#b5c0bb]">
 								<a
-									href="https://instagram.com/blady_507"
+									href="https://instagram.com/jblady_507"
 									target="_blank"
 									rel="noopener noreferrer"
 									className="flex items-center gap-2 transition-colors hover:text-white"
 								>
 									<Instagram size={18} />
-									@blady_507
+									@jblady_507
 								</a>
 								<a
 									href="tel:+50769255088"
@@ -1300,7 +1300,7 @@ function Footer({ t }) {
 
 					<div className="flex items-center gap-4 text-gray-600 text-sm">
 						<a
-							href="https://instagram.com/blady_507"
+							href="https://instagram.com/jblady_507"
 							target="_blank"
 							rel="noopener noreferrer"
 							className="hover:text-pink-400 transition-colors"
