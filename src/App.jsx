@@ -354,16 +354,32 @@ function Navbar({ t, language, setLanguage }) {
 									className="absolute left-0 right-0 top-[calc(100%+0.75rem)] overflow-hidden rounded-[2rem] border border-[#e0d0c1] bg-[#fffaf4] shadow-[0_24px_70px_rgba(40,28,16,0.16)] md:hidden"
 								>
 									<div className="flex flex-col gap-2 px-5 py-5">
-										{links.map(link => (
-											<a
+										{links.map((link, index) => (
+											<motion.a
 												key={link.href}
 												href={link.href}
 												onClick={() => setMenuOpen(false)}
+												initial={{ opacity: 0, y: 10 }}
+												animate={{ opacity: 1, y: 0 }}
+												exit={{ opacity: 0, y: 6 }}
+												transition={{ delay: 0.04 * index, duration: 0.18 }}
 												className="rounded-[1.2rem] border border-[#efe3d7] bg-white px-4 py-3 text-base font-medium text-[#5f6d67] transition-colors hover:text-[#b85e34]"
 											>
 												{link.label}
-											</a>
+											</motion.a>
 										))}
+										<motion.a
+											href="/mis-assets"
+											onClick={() => setMenuOpen(false)}
+											initial={{ opacity: 0, y: 10 }}
+											animate={{ opacity: 1, y: 0 }}
+											exit={{ opacity: 0, y: 6 }}
+											transition={{ delay: 0.04 * links.length, duration: 0.18 }}
+											className="mt-1 flex items-center justify-between rounded-[1.2rem] border border-[#ead6c6] bg-[#fcf6ee] px-4 py-3 text-sm font-semibold uppercase tracking-[0.14em] text-[#8b5e3c] transition-colors hover:bg-white"
+										>
+											<span>{t.nav.clientAccess}</span>
+											<ArrowRight size={16} />
+										</motion.a>
 										<div className="mt-2 flex items-center gap-3">
 											<button
 												type="button"
