@@ -7,6 +7,7 @@
 
 import { QRCodeSVG } from 'qrcode.react'
 import { MapPin, Clock, Phone } from 'lucide-react'
+import BannerHomeButton from './BannerHomeButton'
 
 // ── WhatsApp icon SVG ─────────────────────────────────────────────────────────
 function WhatsAppIcon({ size = 20, color = 'currentColor' }) {
@@ -149,6 +150,7 @@ export default function Flyer() {
         fontFamily: "'Inter', 'Arial', sans-serif",
       }}
     >
+      <BannerHomeButton />
       {/* ── PRINT CANVAS ── */}
       <div
         id="print-flyer"

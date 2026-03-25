@@ -1,5 +1,6 @@
 import { QRCodeSVG } from 'qrcode.react'
 import { Instagram, MapPin, Clock } from 'lucide-react'
+import BannerHomeButton from './BannerHomeButton'
 
 // ── WhatsApp SVG base64 para centro del QR ───────────────────────────────────
 const WA_ICON_B64 = (() => {
@@ -134,6 +135,8 @@ const featured = [
 export default function PrintBanner() {
   return (
     <div className="min-h-screen bg-neutral-300 py-10 px-4 flex justify-center items-start">
+      <BannerHomeButton />
+
       <div
         id="print-banner"
         className="relative w-[816px] h-[1056px] overflow-hidden rounded-sm shadow-2xl text-white"
