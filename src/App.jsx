@@ -673,21 +673,21 @@ function FeaturedDestinations({ t }) {
 		{
 			name: t.destinations.items[0].name,
 			tagline: t.destinations.items[0].tagline,
-			price: '$65',
+			price: '$70',
 			image: '/assets/Bocas-del-toro-3.jpg',
 			badge: t.destinations.items[0].badge,
 		},
 		{
 			name: t.destinations.items[1].name,
 			tagline: t.destinations.items[1].tagline,
-			price: '$40',
+			price: '$45',
 			image: '/assets/tips-valle-de-anton-panama.jpg',
 			badge: t.destinations.items[1].badge,
 		},
 		{
 			name: t.destinations.items[2].name,
 			tagline: t.destinations.items[2].tagline,
-			price: '$55',
+			price: '$60',
 			image: '/assets/Panama-City-11.jpg',
 			badge: t.destinations.items[2].badge,
 		},
@@ -798,12 +798,12 @@ function FeaturedDestinations({ t }) {
 // ─── PRICES / ALL DESTINATIONS ────────────────────────────────────────────────
 function PricesSection({ t }) {
 	const destinations = [
-		{ name: t.destinations.items[0].name, price: 65, icon: '🏝️', popular: true, note: t.prices.routeNotes.bocas },
+		{ name: t.destinations.items[0].name, price: 70, icon: '🏝️', popular: true, note: t.prices.routeNotes.bocas },
 		{ name: 'Boquete', price: 35, icon: '⛰️', popular: true, note: t.prices.routeNotes.boquete },
 		{ name: t.destinations.items[3].name, price: 40, icon: '⛵', popular: false, note: t.prices.routeNotes.bocaChica },
-		{ name: t.destinations.items[1].name, price: 40, icon: '🌋', popular: false, note: t.prices.routeNotes.valle },
-		{ name: t.destinations.items[2].name, price: 55, icon: '🏙️', popular: false, note: t.prices.routeNotes.city },
-		{ name: 'David', price: 30, icon: '🏘️', popular: false, note: t.prices.routeNotes.david },
+		{ name: t.destinations.items[1].name, price: 45, icon: '🌋', popular: false, note: t.prices.routeNotes.valle },
+		{ name: t.destinations.items[2].name, price: 60, icon: '🏙️', popular: false, note: t.prices.routeNotes.city },
+		{ name: 'David', price: 35, icon: '🏘️', popular: false, note: t.prices.routeNotes.david },
 	];
 
 	return (

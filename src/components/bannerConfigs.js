@@ -1,29 +1,14 @@
 export const bannerConfigs = [
 	{
-		slug: 'banner-claro-4k',
-		title: 'Banner_claro_4k.png',
-		route: '/banners/banner-claro-4k',
-		image: '/assets/mis-assets/Banner_claro_4k.png',
+		slug: 'banner-modificado',
+		title: 'Banner_modificado.png',
+		route: '/banners/banner-modificado',
+		image: '/assets/mis-assets/Banner_modificado.png',
 		orientation: 'vertical',
 		qr: {
-			// EDIT QR POSITION FOR Banner_claro_4k.png HERE
+			// EDIT QR POSITION FOR Banner_modificado.png HERE
 			left: 74.55,
-			top: 80.25,
-			width: 22.52,
-			pixelSize: 160,
-			iconSize: 38,
-		},
-	},
-	{
-		slug: 'banner-oscuro-4k',
-		title: 'Banner_oscuro_4k.png',
-		route: '/banners/banner-oscuro-4k',
-		image: '/assets/mis-assets/Banner_oscuro_4k.png',
-		orientation: 'vertical',
-		qr: {
-			// EDIT QR POSITION FOR Banner_oscuro_4k.png HERE
-			left: 74.55,
-			top: 80.25,
+			top: 76.25,
 			width: 22.52,
 			pixelSize: 160,
 			iconSize: 38,
@@ -31,15 +16,15 @@ export const bannerConfigs = [
 	},
 	{
 		slug: 'tarjeta-4k',
-		title: 'Tarjeta_4k.png',
+		title: 'Tarjeta_4k_modificada.png',
 		route: '/banners/tarjeta-4k',
-		image: '/assets/mis-assets/Tarjeta_4k.png',
+		image: '/assets/mis-assets/Tarjeta_4k_modificada.png',
 		orientation: 'horizontal',
 		qr: {
-			// EDIT QR POSITION FOR Tarjeta_4k.png HERE
-			left: 81.21,
-			top: 74.95,
-			width: 13.5,
+			// EDIT QR POSITION FOR Tarjeta_4k_modificada.png HERE
+			left: 80.40,
+			top: 73.95,
+			width: 16.5,
 			pixelSize: 220,
 			iconSize: 50,
 		},
