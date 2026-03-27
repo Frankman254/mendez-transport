@@ -24,6 +24,8 @@ import {
 	Lock,
 	Compass,
 	Luggage,
+	Sun,
+	Moon,
 } from 'lucide-react';
 import Flyer from './components/Flyer';
 import PrintBanner from './components/PrintBanner';
@@ -248,8 +250,22 @@ function FadeIn({ children, delay = 0, direction = 'up', className = '' }) {
 	);
 }
 
+// ─── THEME TOGGLE ─────────────────────────────────────────────────────────────
+function ThemeToggle({ darkMode, onToggle }) {
+	return (
+		<button
+			type="button"
+			onClick={onToggle}
+			aria-label="Toggle theme"
+			className="flex h-8 w-8 items-center justify-center rounded-full border border-[#ddd0c2] bg-white text-[#5f6d67] transition-colors hover:text-[#18231f] dark:border-white/15 dark:bg-white/10 dark:text-[#8fa495] dark:hover:text-white"
+		>
+			{darkMode ? <Sun size={15} /> : <Moon size={15} />}
+		</button>
+	);
+}
+
 // ─── NAVBAR ───────────────────────────────────────────────────────────────────
-function Navbar({ t, language, setLanguage }) {
+function Navbar({ t, language, setLanguage, darkMode = false, onToggleTheme }) {
 	const [scrolled, setScrolled] = useState(false);
 	const [menuOpen, setMenuOpen] = useState(false);
 
@@ -300,18 +316,18 @@ function Navbar({ t, language, setLanguage }) {
 						<div
 							className={`flex h-14 items-center justify-between rounded-full border px-4 sm:px-6 lg:px-8 ${
 								scrolled
-									? 'border-[#d9c8b8] bg-[#fffaf4]/92 shadow-[0_18px_60px_rgba(36,25,10,0.12)] backdrop-blur-md'
-									: 'border-white/40 bg-white/55 backdrop-blur-md'
+									? 'border-[#d9c8b8] bg-[#fffaf4]/92 shadow-[0_18px_60px_rgba(36,25,10,0.12)] backdrop-blur-md dark:border-white/10 dark:bg-[#0c1410]/95 dark:shadow-[0_18px_60px_rgba(0,0,0,0.5)]'
+									: 'border-white/40 bg-white/55 backdrop-blur-md dark:border-white/15 dark:bg-[#0c1410]/80'
 							}`}
 						>
-							<MendezLogo size={28} showText={true} dark={true} />
+							<MendezLogo size={28} showText={true} dark={!darkMode} />
 
 							<div className="hidden md:flex items-center gap-6">
 								{links.map(link => (
 									<a
 										key={link.href}
 										href={link.href}
-										className="relative text-xs font-medium uppercase tracking-[0.18em] text-[#5f6d67] transition-colors duration-200 hover:text-[#18231f] group"
+										className="relative text-xs font-medium uppercase tracking-[0.18em] text-[#5f6d67] transition-colors duration-200 hover:text-[#18231f] group dark:text-[#8fa495] dark:hover:text-white"
 									>
 										{link.label}
 										<span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-[#b85e34] transition-all duration-300 group-hover:w-full" />
@@ -320,10 +336,11 @@ function Navbar({ t, language, setLanguage }) {
 								<button
 									type="button"
 									onClick={() => setLanguage(language === 'es' ? 'en' : 'es')}
-									className="rounded-full border border-[#ddd0c2] bg-white px-2.5 py-1 text-[10px] font-semibold text-[#5f6d67] transition-colors hover:text-[#18231f]"
+									className="rounded-full border border-[#ddd0c2] bg-white px-2.5 py-1 text-[10px] font-semibold text-[#5f6d67] transition-colors hover:text-[#18231f] dark:border-white/15 dark:bg-white/10 dark:text-[#8fa495] dark:hover:text-white"
 								>
 									{language.toUpperCase()}
 								</button>
+								{onToggleTheme && <ThemeToggle darkMode={darkMode} onToggle={onToggleTheme} />}
 								<a
 									href="https://wa.me/50769255088"
 									target="_blank"
@@ -368,18 +385,7 @@ function Navbar({ t, language, setLanguage }) {
 												{link.label}
 											</motion.a>
 										))}
-										<motion.a
-											href="/mis-assets"
-											onClick={() => setMenuOpen(false)}
-											initial={{ opacity: 0, y: 10 }}
-											animate={{ opacity: 1, y: 0 }}
-											exit={{ opacity: 0, y: 6 }}
-											transition={{ delay: 0.04 * links.length, duration: 0.18 }}
-											className="mt-1 flex items-center justify-between rounded-[1.2rem] border border-[#ead6c6] bg-[#fcf6ee] px-4 py-3 text-sm font-semibold uppercase tracking-[0.14em] text-[#8b5e3c] transition-colors hover:bg-white"
-										>
-											<span>{t.nav.clientAccess}</span>
-											<ArrowRight size={16} />
-										</motion.a>
+										
 										<div className="mt-2 flex items-center gap-3">
 											<button
 												type="button"
@@ -629,11 +635,11 @@ function Benefits({ t }) {
 	];
 
 	return (
-		<section className="bg-[#fffaf4] py-20">
+		<section className="bg-[#fffaf4] dark:bg-[#0c1410] py-20">
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 				<FadeIn className="text-center mb-14">
 					<span className="text-sm font-bold uppercase tracking-[0.24em] text-[#a2552f]">{t.benefits.tag}</span>
-					<h2 className="mt-3 font-display text-5xl text-[#18231f] sm:text-6xl">{t.benefits.title}</h2>
+					<h2 className="mt-3 font-display text-5xl text-[#18231f] dark:text-[#d4e0d7] sm:text-6xl">{t.benefits.title}</h2>
 					<p className="mx-auto mt-4 max-w-2xl text-lg leading-8 text-[#66726e]">{t.benefits.subtitle}</p>
 				</FadeIn>
 
@@ -697,7 +703,7 @@ function FeaturedDestinations({ t }) {
 	const [heroDestination, ...secondaryDestinations] = featured;
 
 	return (
-		<section id="destinations" className="bg-[#f4ecdf] py-20">
+		<section id="destinations" className="bg-[#f4ecdf] dark:bg-[#0d150f] py-20">
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 				<FadeIn className="text-center mb-14">
 					<span className="text-sm font-bold uppercase tracking-[0.24em] text-[#a2552f]">{t.destinations.tag}</span>
@@ -913,7 +919,7 @@ function VehicleShowcase({ t }) {
 	];
 
 	return (
-		<section id="vehicle" className="overflow-hidden bg-[#fffaf4] py-20">
+		<section id="vehicle" className="overflow-hidden bg-[#fffaf4] dark:bg-[#0c1410] py-20">
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 				<div className="grid lg:grid-cols-2 gap-16 items-center">
 					{/* Text side */}
@@ -1020,13 +1026,13 @@ function JourneySection({ t }) {
 	const icons = [<MapPin size={20} />, <Calendar size={20} />, <Luggage size={20} />];
 
 	return (
-		<section id="journey" className="bg-[#fffaf4] py-20">
+		<section id="journey" className="bg-[#fffaf4] dark:bg-[#0c1410] py-20">
 			<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 				<FadeIn className="mx-auto max-w-3xl text-center">
 					<span className="text-sm font-bold uppercase tracking-[0.24em] text-[#a2552f]">
 						{t.journey.tag}
 					</span>
-					<h2 className="mt-3 font-display text-5xl text-[#18231f] sm:text-6xl">
+					<h2 className="mt-3 font-display text-5xl text-[#18231f] dark:text-[#d4e0d7] sm:text-6xl">
 						{t.journey.title}
 					</h2>
 					<p className="mt-4 text-lg leading-8 text-[#66726e]">
@@ -1057,15 +1063,108 @@ function JourneySection({ t }) {
 
 // ─── BUSINESS CARD SECTION ────────────────────────────────────────────────────
 function BusinessCardSection({ paidView = false, t }) {
-	const firstPreviewImage = paidView
-		? '/assets/mis-assets/Tarjeta_4k.png'
-		: '/assets/Panama-City.jpg';
-	const secondPreviewImage = paidView
-		? '/assets/mis-assets/Banner_oscuro_4k.png'
-		: '/assets/tips-valle-de-anton-panama.jpg';
+	if (paidView) {
+		// ── Vista pagada: tarjeta a ancho completo + banner + QR ──────────────
+		return (
+			<section className="bg-[#f7efe4] dark:bg-[#0e1611] py-20">
+				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+					<FadeIn className="text-center mb-12">
+						<span className="text-sm font-bold uppercase tracking-[0.24em] text-[#a2552f]">
+							{t.contact.tag}
+						</span>
+						<h2 className="mt-3 font-display text-5xl text-[#18231f] sm:text-6xl">
+							{t.contact.title}
+						</h2>
+						<p className="mx-auto mt-4 max-w-2xl text-lg leading-8 text-[#66726e]">
+							{t.contact.subtitle}
+						</p>
+					</FadeIn>
 
+					{/* Tarjeta a ancho completo */}
+					<FadeIn>
+						<motion.div
+							whileHover={{ scale: 1.01 }}
+							transition={{ type: 'spring', stiffness: 200 }}
+							className="overflow-hidden rounded-[2rem] border border-[#eadfd4] shadow-[0_32px_80px_rgba(40,28,16,0.14)] mb-10"
+						>
+							<img
+								src="/assets/mis-assets/Tarjeta_4k.png"
+								alt="Tarjeta Méndez Transport"
+								className="w-full object-cover"
+							/>
+						</motion.div>
+					</FadeIn>
+
+					{/* Banner vertical + QR y contacto */}
+					<div className="grid md:grid-cols-2 gap-10 items-start">
+						<FadeIn direction="left">
+							<motion.div
+								whileHover={{ scale: 1.02 }}
+								transition={{ type: 'spring', stiffness: 250 }}
+								className="overflow-hidden rounded-[1.8rem] border border-[#eadfd4] shadow-[0_24px_70px_rgba(40,28,16,0.10)]"
+							>
+								<img
+									src="/assets/mis-assets/Banner_oscuro_4k.png"
+									alt="Banner Méndez Transport"
+									className="w-full object-cover"
+								/>
+							</motion.div>
+						</FadeIn>
+
+						<FadeIn direction="right">
+							<div className="rounded-[2rem] border border-[#eadfd4] bg-[#fffaf4] p-8 text-left shadow-[0_24px_70px_rgba(40,28,16,0.08)]">
+								{/* QR WhatsApp */}
+								<div className="flex justify-center mb-6">
+									<WhatsAppQR
+										url="https://wa.me/50769255088"
+										size={160}
+										label={t.contact.primary}
+									/>
+								</div>
+
+								<div className="grid gap-3">
+									<a
+										href="https://wa.me/50769255088"
+										target="_blank"
+										rel="noopener noreferrer"
+										className="inline-flex items-center justify-center gap-3 rounded-full bg-[#18231f] px-6 py-4 text-sm font-bold uppercase tracking-[0.18em] text-white transition-transform duration-300 hover:-translate-y-0.5"
+									>
+										<WhatsAppIcon size={20} />
+										<span>{t.contact.primary}</span>
+									</a>
+									<a
+										href="tel:+50769255088"
+										className="inline-flex items-center justify-center gap-3 rounded-full border border-[#18231f]/12 bg-white px-6 py-4 text-sm font-bold uppercase tracking-[0.18em] text-[#18231f] transition-colors duration-300 hover:bg-[#f7f1ea]"
+									>
+										<Phone size={18} />
+										<span>{t.contact.secondary}</span>
+									</a>
+								</div>
+
+								<div className="mt-6 rounded-[1.6rem] border border-[#eadfd4] bg-white p-6">
+									<p className="text-xs font-bold uppercase tracking-[0.22em] text-[#a35d37]">
+										{t.contact.supportTitle}
+									</p>
+									<div className="mt-4 space-y-3">
+										{t.contact.supportItems.map((item) => (
+											<div key={item} className="flex items-start gap-3 text-[#50605a]">
+												<CheckCircle size={18} className="mt-1 text-brand-red" />
+												<span className="text-sm leading-6">{item}</span>
+											</div>
+										))}
+									</div>
+								</div>
+							</div>
+						</FadeIn>
+					</div>
+				</div>
+			</section>
+		);
+	}
+
+	// ── Vista general: imágenes de stock, sin QR ──────────────────────────────
 	return (
-		<section className="bg-[#f7efe4] py-20">
+		<section className="bg-[#f7efe4] dark:bg-[#0e1611] py-20">
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 				<FadeIn className="text-center mb-14">
 					<span className="text-sm font-bold uppercase tracking-[0.24em] text-[#a2552f]">
@@ -1080,7 +1179,6 @@ function BusinessCardSection({ paidView = false, t }) {
 				</FadeIn>
 
 				<div className="grid md:grid-cols-2 gap-12 items-center max-w-5xl mx-auto">
-					{/* Business cards */}
 					<FadeIn direction="left">
 						<div className="space-y-6">
 							<motion.div
@@ -1088,27 +1186,18 @@ function BusinessCardSection({ paidView = false, t }) {
 								transition={{ type: 'spring', stiffness: 300 }}
 								className="cursor-pointer overflow-hidden rounded-[1.8rem] border border-[#eadfd4] shadow-[0_24px_70px_rgba(40,28,16,0.10)]"
 							>
-								<img
-									src={firstPreviewImage}
-									alt="Méndez Transport preview"
-									className="w-full object-cover"
-								/>
+								<img src="/assets/Panama-City.jpg" alt="Méndez Transport preview" className="w-full object-cover" />
 							</motion.div>
 							<motion.div
 								whileHover={{ scale: 1.02, rotate: 1 }}
 								transition={{ type: 'spring', stiffness: 300 }}
 								className="cursor-pointer overflow-hidden rounded-[1.8rem] border border-[#eadfd4] shadow-[0_24px_70px_rgba(40,28,16,0.10)]"
 							>
-								<img
-									src={secondPreviewImage}
-									alt="Méndez Transport preview"
-									className="w-full object-cover"
-								/>
+								<img src="/assets/tips-valle-de-anton-panama.jpg" alt="Méndez Transport preview" className="w-full object-cover" />
 							</motion.div>
 						</div>
 					</FadeIn>
 
-					{/* QR + Contact info */}
 					<FadeIn direction="right">
 						<div className="rounded-[2rem] border border-[#eadfd4] bg-[#fffaf4] p-8 text-left shadow-[0_24px_70px_rgba(40,28,16,0.08)]">
 							<div className="inline-flex rounded-full border border-[#decfbe] bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-[#a35d37]">
@@ -1120,7 +1209,6 @@ function BusinessCardSection({ paidView = false, t }) {
 							<p className="mt-4 max-w-md text-base leading-7 text-[#66726e]">
 								{t.contact.subtitle}
 							</p>
-
 							<div className="mt-8 grid gap-3">
 								<a
 									href="https://wa.me/50769255088"
@@ -1139,7 +1227,6 @@ function BusinessCardSection({ paidView = false, t }) {
 									<span>{t.contact.secondary}</span>
 								</a>
 							</div>
-
 							<div className="mt-8 rounded-[1.6rem] border border-[#eadfd4] bg-white p-6">
 								<p className="text-xs font-bold uppercase tracking-[0.22em] text-[#a35d37]">
 									{t.contact.supportTitle}
@@ -1283,18 +1370,23 @@ function SampleViewLogin({ onSuccess, language }) {
 function LandingPage({
 	paidView = false,
 	watermark = false,
+	hideNavbar = false,
+	darkMode = false,
+	onToggleTheme,
 	t,
 	language,
 	setLanguage,
 }) {
 	return (
-		<div className="min-h-screen bg-[#fffaf4]">
+		<div className="min-h-screen bg-[#fffaf4] dark:bg-[#0c1410]">
 			{watermark && <WatermarkOverlay />}
-			<Navbar
+			{!hideNavbar && <Navbar
 				t={t}
 				language={language}
 				setLanguage={setLanguage}
-			/>
+				darkMode={darkMode}
+				onToggleTheme={onToggleTheme}
+			/>}
 			<Hero paidView={paidView} t={t} />
 			<Benefits t={t} />
 			<FeaturedDestinations t={t} />
@@ -1311,7 +1403,7 @@ function LandingPage({
 function PaidViewLogin({ onSuccess, language }) {
 	const [password, setPassword] = useState('');
 	const [error, setError] = useState(false);
-	const ACCESS_PASSWORD = 'mendez507';
+	const ACCESS_PASSWORD = 'mendez7904';
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
@@ -1359,6 +1451,66 @@ function PaidViewLogin({ onSuccess, language }) {
 					</button>
 				</form>
 			</div>
+		</div>
+	);
+}
+
+// ─── PAID VIEW TABS ───────────────────────────────────────────────────────────
+function PaidViewTabs({ t, language, setLanguage, darkMode = false, onToggleTheme }) {
+	const [activeTab, setActiveTab] = useState('general');
+
+	return (
+		<div className="min-h-screen">
+			{/* Floating tab switcher at bottom — does NOT replace the Navbar */}
+			<div className="fixed bottom-6 left-1/2 z-[200] -translate-x-1/2">
+				<div className="flex items-center gap-1 rounded-full border border-[#ddd0c2] bg-white shadow-xl px-1 py-1">
+					<button
+						type="button"
+						onClick={() => { setActiveTab('general'); window.scrollTo(0,0); }}
+						className={`rounded-full px-5 py-2 text-xs font-semibold transition-colors ${
+							activeTab === 'general'
+								? 'bg-[#18231f] text-white shadow-sm'
+								: 'text-[#5f6d67] hover:text-[#18231f]'
+						}`}
+					>
+						Vista General
+					</button>
+					<button
+						type="button"
+						onClick={() => { setActiveTab('completa'); window.scrollTo(0,0); }}
+						className={`rounded-full px-5 py-2 text-xs font-semibold transition-colors ${
+							activeTab === 'completa'
+								? 'bg-brand-red text-white shadow-sm'
+								: 'text-[#5f6d67] hover:text-[#18231f]'
+						}`}
+					>
+						Vista Completa
+					</button>
+				</div>
+			</div>
+
+			{/* Tab content — LandingPage renders its own Navbar normally */}
+			{activeTab === 'general' ? (
+				<LandingPage
+					paidView={false}
+					watermark={false}
+					darkMode={darkMode}
+					onToggleTheme={onToggleTheme}
+					t={t}
+					language={language}
+					setLanguage={setLanguage}
+				/>
+			) : (
+				<LandingPage
+					paidView={true}
+					watermark={false}
+					darkMode={darkMode}
+					onToggleTheme={onToggleTheme}
+					t={t}
+					language={language}
+					setLanguage={setLanguage}
+				/>
+			)}
 		</div>
 	);
 }
@@ -1492,12 +1644,6 @@ function Footer({ t }) {
 						>
 							<Phone size={18} />
 						</a>
-						<a
-							href="/mis-assets"
-							className="rounded-full border border-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-gray-500 transition-colors hover:border-white/20 hover:text-gray-300"
-						>
-							{t.footer.clientAccess}
-						</a>
 					</div>
 				</div>
 
@@ -1514,6 +1660,9 @@ export default function App() {
 	const [language, setLanguage] = useState(
 		() => window.localStorage.getItem('lang_pref') || 'es'
 	);
+	const [darkMode, setDarkMode] = useState(
+		() => window.localStorage.getItem('theme') === 'dark'
+	);
 	const [paidViewAuthenticated, setPaidViewAuthenticated] = useState(() =>
 		window.sessionStorage.getItem('paid_view_access') === 'granted'
 	);
@@ -1521,40 +1670,27 @@ export default function App() {
 		window.sessionStorage.getItem('sample_view_access') === 'granted'
 	);
 	const t = translations[language] ?? translations.es;
+	const toggleTheme = () => setDarkMode(d => !d);
 
 	useEffect(() => {
 		window.localStorage.setItem('lang_pref', language);
 	}, [language]);
+
+	useEffect(() => {
+		document.documentElement.classList.toggle('dark', darkMode);
+		window.localStorage.setItem('theme', darkMode ? 'dark' : 'light');
+	}, [darkMode]);
 
 	const bannerPreview = bannerConfigByRoute[window.location.pathname];
 	if (bannerPreview) {
 		return <BannerAssetPreview config={bannerPreview} />;
 	}
 
-	if (window.location.pathname === '/banners') {
-		return <BannersTabbedPage />;
-	}
 
-	if (window.location.pathname === '/tarjeta-4k') {
-		return <ShuttleBanner standalone imageSrc={PRIVATE_CARD_IMAGE} />;
-	}
 
-	if (window.location.pathname === '/banner-vertical') {
-		return <VerticalBannerPreview />;
-	}
 
-	if (window.location.pathname === '/flyer') {
-		return <Flyer />;
-	}
 
-	if (window.location.pathname === '/banner') {
-		return <PrintBanner />;
-	}
 
-	// /mis-assets → portal con contraseña (alias para compatibilidad)
-	if (window.location.pathname === '/mis-assets') {
-		return <AssetsPortal />;
-	}
 
 	// /vista-pagada → landing page completa (sin marca de agua), con contraseña
 	if (window.location.pathname === '/vista-pagada') {
@@ -1570,12 +1706,12 @@ export default function App() {
 			);
 		}
 		return (
-			<LandingPage
-				paidView={true}
-				watermark={false}
+			<PaidViewTabs
 				t={t}
 				language={language}
 				setLanguage={setLanguage}
+				darkMode={darkMode}
+				onToggleTheme={toggleTheme}
 			/>
 		);
 	}
@@ -1597,6 +1733,8 @@ export default function App() {
 			<LandingPage
 				paidView={false}
 				watermark={true}
+				darkMode={darkMode}
+				onToggleTheme={toggleTheme}
 				t={t}
 				language={language}
 				setLanguage={setLanguage}

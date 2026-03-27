@@ -4,8 +4,8 @@
  * skipAuth=false (default) → protegido con contraseña (ruta /mis-assets)
  */
 
-import { useState } from 'react';
-import { Lock, Download, Eye, AlertTriangle, CheckCircle, FileImage, X, LogOut, Layers } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Lock, Download, Eye, AlertTriangle, CheckCircle, FileImage, X, LogOut, Layers, Sun, Moon } from 'lucide-react';
 import BannerAssetPreview from './BannerAssetPreview';
 import { bannerConfigs } from './bannerConfigs';
 
@@ -235,7 +235,7 @@ function BannersSection() {
         <div>
           <h2 className="font-bold text-white text-lg">Banners & Tarjeta (con QR)</h2>
           <p className="text-xs text-gray-500">
-            Vista exacta del diseño final — usa el botón <strong className="text-white">Descargar PDF listo para imprimir</strong> para descargar con el QR incluido.
+            Aquí están tus diseños finales listos para imprimir o compartir. Descarga cada uno en imagen o en PDF listo para imprimir.
           </p>
         </div>
       </div>
@@ -359,7 +359,97 @@ function LoginScreen({ onLogin }) {
   );
 }
 
+function WebViewButton() {
+  const [open, setOpen] = useState(false);
+  const [pwd, setPwd] = useState('');
+  const [error, setError] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (pwd === 'mendez7904') {
+      window.sessionStorage.setItem('paid_view_access', 'granted');
+      window.location.href = '/vista-pagada';
+    } else {
+      setError(true);
+      setTimeout(() => setError(false), 2500);
+    }
+  };
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => { setOpen(true); setPwd(''); setError(false); }}
+        className="flex items-center gap-1.5 rounded-full border border-[#f3c863]/30 bg-[#f3c863]/10 px-3 py-1.5 text-xs font-semibold text-[#f7d98a] hover:bg-[#f3c863]/20 transition-colors"
+      >
+        Ver páginas web
+      </button>
+
+      {open && (
+        <div
+          className="fixed inset-0 z-50 flex min-h-screen items-center justify-center bg-black/85 backdrop-blur-md"
+          onClick={() => setOpen(false)}
+        >
+          <div
+            className="w-full max-w-xs rounded-2xl border border-white/10 bg-[#111] p-6 shadow-2xl"
+            onClick={e => e.stopPropagation()}
+          >
+            <h3 className="text-white font-bold text-base mb-1">Páginas web</h3>
+            <p className="text-gray-400 text-xs mb-4">Ingresa la contraseña para ver las vistas.</p>
+            <form onSubmit={handleSubmit} className="space-y-3">
+              <input
+                type="password"
+                value={pwd}
+                onChange={e => { setPwd(e.target.value); setError(false); }}
+                placeholder="Contraseña"
+                autoFocus
+                className={`w-full rounded-xl border px-4 py-2.5 text-sm text-center text-white placeholder-white/30 bg-white/12 outline-none transition-colors tracking-widest ${
+                  error ? 'border-red-500 bg-red-500/10' : 'border-white/20 focus:border-[#f3c863]/60 focus:bg-black'
+                }`}
+              />
+              {error && <p className="text-xs text-red-400 text-center font-semibold">Contraseña incorrecta.</p>}
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setOpen(false)}
+                  className="flex-1 rounded-xl border border-white/10 bg-white/5 py-2.5 text-xs font-semibold text-gray-400 hover:text-white transition-colors"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 rounded-xl bg-brand-red hover:bg-brand-red-dark text-white text-xs font-bold py-2.5 transition-colors"
+                >
+                  Entrar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
 // ─── Assets view ─────────────────────────────────────────────────────────────
+function PortalThemeToggle() {
+  const [dark, setDark] = useState(() => document.documentElement.classList.contains('dark'));
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', dark);
+    localStorage.setItem('theme', dark ? 'dark' : 'light');
+  }, [dark]);
+  return (
+    <button
+      type="button"
+      onClick={() => setDark(d => !d)}
+      aria-label="Toggle theme"
+      className="flex h-8 w-8 items-center justify-center rounded-full border border-white/15 bg-white/8 text-gray-400 hover:text-white transition-colors"
+    >
+      {dark ? <Sun size={15} /> : <Moon size={15} />}
+    </button>
+  );
+}
+
 function AssetsView({ onLogout }) {
   return (
     <div className="min-h-screen bg-brand-black">
@@ -371,15 +461,8 @@ function AssetsView({ onLogout }) {
             <p className="text-xs text-gray-500">Méndez Transport · Archivos del cliente</p>
           </div>
           <div className="flex items-center gap-3">
-            <a
-              href="/vista-pagada"
-              className="flex items-center gap-1.5 rounded-full border border-[#25D366]/30 bg-[#25D366]/10 px-3 py-1.5 text-xs font-semibold text-[#9df6bf] hover:text-white hover:bg-[#25D366]/20 transition-colors"
-            >
-              Pagina completa
-            </a>
-            <span className="flex items-center gap-1.5 rounded-full border border-white/15 bg-white/8 px-3 py-1.5 text-xs font-semibold text-white">
-              Assets
-            </span>
+            <WebViewButton />
+            <PortalThemeToggle />
             <div className="flex items-center gap-1.5 rounded-full bg-green-500/10 border border-green-500/25 px-3 py-1.5">
               <CheckCircle size={12} className="text-green-400" />
               <span className="text-xs font-semibold text-green-400">Acceso activo</span>
@@ -404,10 +487,8 @@ function AssetsView({ onLogout }) {
         <div className="mb-10 rounded-2xl border border-brand-red/20 bg-brand-red/5 p-6">
           <h2 className="text-white font-bold text-lg mb-1">Tus archivos listos para descargar</h2>
           <p className="text-gray-400 text-sm">
-            Aquí encontrarás todos los logos y diseños creados para Méndez Transport.
-            Haz clic en <strong className="text-white">Descargar</strong> en cada archivo.
-            Los archivos con el aviso <span className="text-amber-400 font-semibold">Fondo blanco</span> no
-            deben usarse sobre fondos claros — úsalos sobre fondos oscuros o de color.
+            Aquí encontrarás todos los logos, banners y diseños creados para Méndez Transport.
+            Pulsa <strong className="text-white">Descargar</strong> en cualquier archivo para guardarlo en alta calidad.
           </p>
         </div>
 

@@ -237,10 +237,6 @@ window.addEventListener('load', function () {
 							<h1 className="text-xl font-black uppercase tracking-[0.18em] text-white sm:text-2xl">
 								{config.title}
 							</h1>
-							<div className="flex flex-wrap items-center justify-center gap-3 text-sm text-white/75">
-								<span>{config.route}</span>
-								<span>{`QR: left ${config.qr.left}% · top ${config.qr.top}% · width ${config.qr.width}%`}</span>
-							</div>
 							<div className="flex flex-wrap items-center justify-center gap-2">
 								<button
 									type="button"
