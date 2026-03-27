@@ -353,7 +353,7 @@ function Navbar({ t, language, setLanguage, darkMode = false, onToggleTheme }) {
 							</div>
 
 							<button
-								className="rounded-full p-2 text-[#18231f] md:hidden"
+								className="rounded-full p-2 text-[#18231f] dark:text-[#e7efe9] md:hidden"
 								onClick={() => setMenuOpen(!menuOpen)}
 								aria-label="Toggle menu"
 							>
@@ -368,7 +368,7 @@ function Navbar({ t, language, setLanguage, darkMode = false, onToggleTheme }) {
 									animate={{ opacity: 1, y: 0, scale: 1 }}
 									exit={{ opacity: 0, y: -8, scale: 0.98 }}
 									transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
-									className="absolute left-0 right-0 top-[calc(100%+0.75rem)] overflow-hidden rounded-[2rem] border border-[#e0d0c1] bg-[#fffaf4] shadow-[0_24px_70px_rgba(40,28,16,0.16)] md:hidden"
+									className="absolute left-0 right-0 top-[calc(100%+0.75rem)] overflow-hidden rounded-[2rem] border border-[#e0d0c1] bg-[#fffaf4] shadow-[0_24px_70px_rgba(40,28,16,0.16)] dark:border-white/10 dark:bg-[#101814] dark:shadow-[0_24px_70px_rgba(0,0,0,0.45)] md:hidden"
 								>
 									<div className="flex flex-col gap-2 px-5 py-5">
 										{links.map((link, index) => (
@@ -380,7 +380,7 @@ function Navbar({ t, language, setLanguage, darkMode = false, onToggleTheme }) {
 												animate={{ opacity: 1, y: 0 }}
 												exit={{ opacity: 0, y: 6 }}
 												transition={{ delay: 0.04 * index, duration: 0.18 }}
-												className="rounded-[1.2rem] border border-[#efe3d7] bg-white px-4 py-3 text-base font-medium text-[#5f6d67] transition-colors hover:text-[#b85e34]"
+												className="rounded-[1.2rem] border border-[#efe3d7] bg-white px-4 py-3 text-base font-medium text-[#5f6d67] transition-colors hover:text-[#b85e34] dark:border-white/10 dark:bg-white/5 dark:text-[#9eb0a8] dark:hover:text-white"
 											>
 												{link.label}
 											</motion.a>
@@ -390,7 +390,7 @@ function Navbar({ t, language, setLanguage, darkMode = false, onToggleTheme }) {
 											<button
 												type="button"
 												onClick={() => setLanguage(language === 'es' ? 'en' : 'es')}
-												className="rounded-full border border-[#ddd0c2] bg-white px-3 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#5f6d67]"
+												className="rounded-full border border-[#ddd0c2] bg-white px-3 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-[#5f6d67] dark:border-white/10 dark:bg-white/5 dark:text-[#9eb0a8]"
 											>
 												{language.toUpperCase()}
 											</button>
@@ -435,22 +435,22 @@ function PublicHero({ t }) {
 	];
 
 	return (
-		<section className="relative overflow-hidden bg-[#f6efe4] pt-24 text-[#18231f] sm:pt-28">
-			<div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(227,30,36,0.10),transparent_28%),radial-gradient(circle_at_80%_20%,rgba(19,76,65,0.14),transparent_24%),linear-gradient(180deg,#f6efe4_0%,#f8f5ee_48%,#fffdf9_100%)]" />
+		<section className="relative overflow-hidden bg-[#f6efe4] pt-24 text-[#18231f] dark:bg-[#0c1410] dark:text-[#e7efe9] sm:pt-28">
+			<div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(227,30,36,0.10),transparent_28%),radial-gradient(circle_at_80%_20%,rgba(19,76,65,0.14),transparent_24%),linear-gradient(180deg,#f6efe4_0%,#f8f5ee_48%,#fffdf9_100%)] dark:bg-[radial-gradient(circle_at_top_left,rgba(227,30,36,0.12),transparent_28%),radial-gradient(circle_at_80%_20%,rgba(39,96,84,0.18),transparent_24%),linear-gradient(180deg,#0c1410_0%,#101913_48%,#0b120e_100%)]" />
 			<div className="absolute right-0 top-0 h-72 w-72 rounded-full bg-[#d97745]/10 blur-3xl" />
 
 			<div className="relative mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8 lg:pb-24">
 				<div className="grid items-end gap-10 lg:grid-cols-[1.05fr_0.95fr]">
 					<FadeIn className="max-w-2xl">
-						<div className="inline-flex items-center gap-2 rounded-full border border-[#c9b49e] bg-white/70 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-[#8b5e3c]">
+						<div className="inline-flex items-center gap-2 rounded-full border border-[#c9b49e] bg-white/70 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-[#8b5e3c] dark:border-white/10 dark:bg-white/5 dark:text-[#f0b06d]">
 							<Compass size={14} />
 							{t.hero.eyebrow}
 						</div>
-						<h1 className="mt-6 max-w-xl font-display text-6xl leading-[0.92] text-[#18231f] sm:text-7xl lg:text-[5.4rem]">
+						<h1 className="mt-6 max-w-xl font-display text-6xl leading-[0.92] text-[#18231f] dark:text-[#e7efe9] sm:text-7xl lg:text-[5.4rem]">
 							{t.hero.title1}
 							<span className="block text-brand-red">{t.hero.title2}</span>
 						</h1>
-						<p className="mt-6 max-w-xl text-lg leading-8 text-[#55615d]">
+						<p className="mt-6 max-w-xl text-lg leading-8 text-[#55615d] dark:text-[#9eb0a8]">
 							{t.hero.subtitle}
 						</p>
 
@@ -464,7 +464,7 @@ function PublicHero({ t }) {
 							</a>
 							<a
 								href="#destinations"
-								className="inline-flex items-center justify-center gap-2 rounded-full border border-[#18231f]/15 bg-white/70 px-7 py-4 text-sm font-bold uppercase tracking-[0.18em] text-[#18231f] transition-colors duration-300 hover:bg-white"
+								className="inline-flex items-center justify-center gap-2 rounded-full border border-[#18231f]/15 bg-white/70 px-7 py-4 text-sm font-bold uppercase tracking-[0.18em] text-[#18231f] transition-colors duration-300 hover:bg-white dark:border-white/10 dark:bg-white/5 dark:text-white dark:hover:bg-white/10"
 							>
 								{t.hero.secondary}
 							</a>
@@ -474,7 +474,7 @@ function PublicHero({ t }) {
 							{t.hero.highlights.map((highlight) => (
 								<div
 									key={highlight}
-									className="rounded-full border border-[#d6c8bb] bg-white/70 px-4 py-2 text-sm font-semibold text-[#40504a]"
+									className="rounded-full border border-[#d6c8bb] bg-white/70 px-4 py-2 text-sm font-semibold text-[#40504a] dark:border-white/10 dark:bg-white/5 dark:text-[#9eb0a8]"
 								>
 									{highlight}
 								</div>
@@ -485,7 +485,7 @@ function PublicHero({ t }) {
 					<FadeIn direction="right">
 						<div className="relative">
 							<div className="absolute -left-6 -top-6 h-28 w-28 rounded-[2rem] bg-[#0f5b4f]/10 blur-2xl" />
-							<div className="overflow-hidden rounded-[2rem] border border-[#e6d7c9] bg-white p-4 shadow-[0_28px_80px_rgba(45,35,18,0.12)]">
+							<div className="overflow-hidden rounded-[2rem] border border-[#e6d7c9] bg-white p-4 shadow-[0_28px_80px_rgba(45,35,18,0.12)] dark:border-white/10 dark:bg-[#111a15] dark:shadow-[0_28px_80px_rgba(0,0,0,0.42)]">
 								<div className="grid gap-4">
 									<div className="relative overflow-hidden rounded-[1.6rem]">
 										<img
@@ -508,7 +508,7 @@ function PublicHero({ t }) {
 										{routeHighlights.map((route) => (
 											<div
 												key={route.name}
-												className="overflow-hidden rounded-[1.4rem] border border-[#efe4da] bg-[#fcfaf6]"
+												className="overflow-hidden rounded-[1.4rem] border border-[#efe4da] bg-[#fcfaf6] dark:border-white/10 dark:bg-[#101814]"
 											>
 												<img
 													src={route.image}
@@ -516,8 +516,8 @@ function PublicHero({ t }) {
 													className="h-28 w-full object-cover"
 												/>
 												<div className="p-4">
-													<p className="text-sm font-bold text-[#18231f]">{route.name}</p>
-													<p className="mt-1 text-xs leading-5 text-[#6b7772]">{route.meta}</p>
+													<p className="text-sm font-bold text-[#18231f] dark:text-[#e7efe9]">{route.name}</p>
+													<p className="mt-1 text-xs leading-5 text-[#6b7772] dark:text-[#8fa495]">{route.meta}</p>
 												</div>
 											</div>
 										))}
@@ -535,20 +535,20 @@ function PublicHero({ t }) {
 function Hero({ paidView = false, t }) {
 	if (paidView) {
 		return (
-			<section className="relative overflow-hidden bg-[#f4ecdf] pt-24 sm:pt-28">
-				<div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(184,94,52,0.10),transparent_28%),linear-gradient(180deg,#f4ecdf_0%,#fbf7f1_100%)]" />
+			<section className="relative overflow-hidden bg-[#f4ecdf] pt-24 dark:bg-[#0c1410] sm:pt-28">
+				<div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(184,94,52,0.10),transparent_28%),linear-gradient(180deg,#f4ecdf_0%,#fbf7f1_100%)] dark:bg-[radial-gradient(circle_at_top_left,rgba(184,94,52,0.12),transparent_28%),linear-gradient(180deg,#0c1410_0%,#101913_100%)]" />
 				<div className="relative mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8 lg:pb-24">
 					<div className="grid gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-start">
 						<FadeIn className="max-w-xl">
-							<div className="inline-flex items-center gap-2 rounded-full border border-[#d5c4b5] bg-white/70 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-[#8b5e3c]">
+							<div className="inline-flex items-center gap-2 rounded-full border border-[#d5c4b5] bg-white/70 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-[#8b5e3c] dark:border-white/10 dark:bg-white/5 dark:text-[#f0b06d]">
 								<Compass size={14} />
 								{t.hero.eyebrow}
 							</div>
-							<h1 className="mt-6 font-display text-6xl leading-[0.92] text-[#18231f] sm:text-7xl">
+							<h1 className="mt-6 font-display text-6xl leading-[0.92] text-[#18231f] dark:text-[#e7efe9] sm:text-7xl">
 								{t.hero.title1}
 								<span className="block text-brand-red">{t.hero.title2}</span>
 							</h1>
-							<p className="mt-6 text-lg leading-8 text-[#5b6762]">
+							<p className="mt-6 text-lg leading-8 text-[#5b6762] dark:text-[#9eb0a8]">
 								{t.hero.subtitle}
 							</p>
 							<div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -561,7 +561,7 @@ function Hero({ paidView = false, t }) {
 								</a>
 								<a
 									href="/mis-assets"
-									className="inline-flex items-center justify-center gap-2 rounded-full border border-[#18231f]/15 bg-white/70 px-7 py-4 text-sm font-bold uppercase tracking-[0.18em] text-[#18231f]"
+									className="inline-flex items-center justify-center gap-2 rounded-full border border-[#18231f]/15 bg-white/70 px-7 py-4 text-sm font-bold uppercase tracking-[0.18em] text-[#18231f] dark:border-white/10 dark:bg-white/5 dark:text-white"
 								>
 									{t.nav.clientAccess}
 								</a>
@@ -570,7 +570,7 @@ function Hero({ paidView = false, t }) {
 
 						<FadeIn direction="right">
 							<div className="grid gap-5 xl:grid-cols-[minmax(0,1.05fr)_320px] items-start">
-								<div className="self-start overflow-hidden rounded-[2rem] border border-[#e7d8c8] bg-white p-4 shadow-[0_28px_80px_rgba(45,35,18,0.12)]">
+								<div className="self-start overflow-hidden rounded-[2rem] border border-[#e7d8c8] bg-white p-4 shadow-[0_28px_80px_rgba(45,35,18,0.12)] dark:border-white/10 dark:bg-[#111a15] dark:shadow-[0_28px_80px_rgba(0,0,0,0.42)]">
 									<img
 										src={PRIVATE_CARD_IMAGE}
 										alt="Vista pagada de los assets de Méndez Transport"
@@ -578,18 +578,18 @@ function Hero({ paidView = false, t }) {
 									/>
 								</div>
 								<div className="space-y-5 self-start">
-									<div className="overflow-hidden rounded-[2rem] border border-[#e7d8c8] bg-white p-4 shadow-[0_22px_60px_rgba(45,35,18,0.10)]">
+									<div className="overflow-hidden rounded-[2rem] border border-[#e7d8c8] bg-white p-4 shadow-[0_22px_60px_rgba(45,35,18,0.10)] dark:border-white/10 dark:bg-[#111a15] dark:shadow-[0_22px_60px_rgba(0,0,0,0.38)]">
 										<img
 											src="/assets/mis-assets/Banner_oscuro_4k.png"
 											alt="Banner premium de Méndez Transport"
 											className="h-auto w-full rounded-[1.4rem] object-contain"
 										/>
 									</div>
-									<div className="rounded-[2rem] border border-[#e7d8c8] bg-[#fcf8f1] p-6">
-										<p className="text-xs font-bold uppercase tracking-[0.22em] text-[#a35d37]">
+									<div className="rounded-[2rem] border border-[#e7d8c8] bg-[#fcf8f1] p-6 dark:border-white/10 dark:bg-[#101814]">
+										<p className="text-xs font-bold uppercase tracking-[0.22em] text-[#a35d37] dark:text-[#f0b06d]">
 											{t.hero.paidBadge}
 										</p>
-										<p className="mt-3 text-base leading-7 text-[#5b6762]">
+										<p className="mt-3 text-base leading-7 text-[#5b6762] dark:text-[#9eb0a8]">
 											{t.hero.paidDesc}
 										</p>
 									</div>
