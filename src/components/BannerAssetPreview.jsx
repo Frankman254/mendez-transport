@@ -1,6 +1,6 @@
 import { useMemo, useRef } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
-import { Download } from 'lucide-react';
+import { FileDown } from 'lucide-react';
 import BannerHomeButton from './BannerHomeButton';
 
 const WHATSAPP_ICON = `data:image/svg+xml;base64,${btoa(
@@ -19,34 +19,18 @@ function loadImage(src) {
 }
 
 function drawRoundedRect(ctx, x, y, width, height, radius) {
-	const safeRadius = Math.min(radius, width / 2, height / 2);
+	const r = Math.min(radius, width / 2, height / 2);
 	ctx.beginPath();
-	ctx.moveTo(x + safeRadius, y);
-	ctx.lineTo(x + width - safeRadius, y);
-	ctx.quadraticCurveTo(x + width, y, x + width, y + safeRadius);
-	ctx.lineTo(x + width, y + height - safeRadius);
-	ctx.quadraticCurveTo(x + width, y + height, x + width - safeRadius, y + height);
-	ctx.lineTo(x + safeRadius, y + height);
-	ctx.quadraticCurveTo(x, y + height, x, y + height - safeRadius);
-	ctx.lineTo(x, y + safeRadius);
-	ctx.quadraticCurveTo(x, y, x + safeRadius, y);
+	ctx.moveTo(x + r, y);
+	ctx.lineTo(x + width - r, y);
+	ctx.quadraticCurveTo(x + width, y, x + width, y + r);
+	ctx.lineTo(x + width, y + height - r);
+	ctx.quadraticCurveTo(x + width, y + height, x + width - r, y + height);
+	ctx.lineTo(x + r, y + height);
+	ctx.quadraticCurveTo(x, y + height, x, y + height - r);
+	ctx.lineTo(x, y + r);
+	ctx.quadraticCurveTo(x, y, x + r, y);
 	ctx.closePath();
-}
-
-function readPx(value, fallback = 0) {
-	const parsed = Number.parseFloat(value);
-	return Number.isFinite(parsed) ? parsed : fallback;
-}
-
-function parseBoxShadow(value) {
-	if (!value || value === 'none') return null;
-
-	const colorMatch = value.match(/rgba?\([^)]+\)/);
-	const color = colorMatch?.[0] ?? 'rgba(0, 0, 0, 0)';
-	const numericPart = value.replace(color, '').match(/-?\d+(\.\d+)?/g) ?? [];
-	const [offsetX = 0, offsetY = 0, blur = 0] = numericPart.map(Number);
-
-	return { color, offsetX, offsetY, blur };
 }
 
 export default function BannerAssetPreview({
@@ -71,79 +55,160 @@ export default function BannerAssetPreview({
 		transformOrigin: 'top left',
 	};
 
-	const downloadMergedPng = async () => {
+	/**
+	 * Renderiza el banner + QR en un canvas usando las coordenadas del config
+	 * (nunca DOM measurements) para garantizar que el QR sea siempre cuadrado
+	 * y esté perfectamente posicionado.
+	 */
+	const buildCanvas = async () => {
 		const svg = qrRef.current?.querySelector('svg');
-		const qrCard = qrRef.current?.firstElementChild;
-		const imageFrame = imageFrameRef.current;
-		if (!svg || !qrCard || !imageFrame) return;
+		if (!svg) throw new Error('QR SVG not found');
 
+		await document.fonts.ready;
+
+		const [baseImage, waIcon] = await Promise.all([
+			loadImage(config.image),
+			loadImage(WHATSAPP_ICON),
+		]);
+
+		if (!baseImage.naturalWidth) throw new Error('Base image failed to load');
+
+		// Serializar el SVG del QR (contiene el hueco "excavated" pero el <image>
+		// del ícono podría no renderizarse en canvas por restricciones de data-URLs
+		// anidadas → lo dibujamos por separado después)
 		const qrMarkup = new XMLSerializer().serializeToString(svg);
 		const qrDataUrl = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(qrMarkup)}`;
+		const qrImage = await loadImage(qrDataUrl);
 
+		// Canvas en las dimensiones reales de la imagen del banner
+		const canvas = document.createElement('canvas');
+		canvas.width = baseImage.naturalWidth;
+		canvas.height = baseImage.naturalHeight;
+		const ctx = canvas.getContext('2d');
+		if (!ctx) throw new Error('Canvas context unavailable');
+
+		// ── 1. Fondo: imagen del banner ───────────────────────────────────────
+		ctx.drawImage(baseImage, 0, 0, canvas.width, canvas.height);
+
+		// ── 2. Geometría del QR desde config (siempre cuadrado) ───────────────
+		// config.qr.left/top/width son porcentajes del contenedor del banner.
+		// El div del QR tiene aspect-square → usamos canvas.width como referencia.
+		const qrLeft    = (config.qr.left  / 100) * canvas.width;
+		const qrTop     = (config.qr.top   / 100) * canvas.height;
+		const qrSize    = (config.qr.width / 100) * canvas.width;   // cuadrado
+		const padding   = qrSize * 0.08;                             // p-[8%]
+		const svgSize   = qrSize - 2 * padding;
+		const cardR     = qrSize * 0.07;                             // rounded-[1rem]
+		const borderW   = Math.max(1.5, qrSize * 0.004);
+
+		// ── 3. Sombra de la tarjeta ───────────────────────────────────────────
+		ctx.save();
+		ctx.shadowColor   = 'rgba(0,0,0,0.30)';
+		ctx.shadowBlur    = qrSize * 0.12;
+		ctx.shadowOffsetX = 0;
+		ctx.shadowOffsetY = qrSize * 0.05;
+		drawRoundedRect(ctx, qrLeft, qrTop, qrSize, qrSize, cardR);
+		ctx.fillStyle = '#fffdf8';
+		ctx.fill();
+		ctx.restore();
+
+		// ── 4. Fondo de la tarjeta (sin sombra para el borde) ─────────────────
+		ctx.save();
+		drawRoundedRect(ctx, qrLeft, qrTop, qrSize, qrSize, cardR);
+		ctx.fillStyle = '#fffdf8';
+		ctx.fill();
+		ctx.restore();
+
+		// ── 5. Borde dorado de la tarjeta ─────────────────────────────────────
+		ctx.save();
+		drawRoundedRect(ctx, qrLeft, qrTop, qrSize, qrSize, cardR);
+		ctx.strokeStyle = '#d4b36b';
+		ctx.lineWidth   = borderW;
+		ctx.stroke();
+		ctx.restore();
+
+		// ── 6. QR SVG (con hueco del excavate) ────────────────────────────────
+		ctx.drawImage(
+			qrImage,
+			qrLeft + padding,
+			qrTop  + padding,
+			svgSize,
+			svgSize,
+		);
+
+		// ── 7. Ícono WhatsApp sobre el hueco (dibujado explícitamente) ─────────
+		// Posición: centro exacto del SVG del QR
+		const iconRatio = config.qr.iconSize / config.qr.pixelSize;
+		const iconPx    = svgSize * iconRatio;
+		const iconX     = qrLeft + padding + (svgSize - iconPx) / 2;
+		const iconY     = qrTop  + padding + (svgSize - iconPx) / 2;
+
+		// Fondo blanco pequeño detrás del ícono para limpiar el hueco
+		ctx.save();
+		ctx.fillStyle = '#ffffff';
+		const holeSize = iconPx * 1.15;
+		const holeX    = qrLeft + padding + (svgSize - holeSize) / 2;
+		const holeY    = qrTop  + padding + (svgSize - holeSize) / 2;
+		ctx.fillRect(holeX, holeY, holeSize, holeSize);
+		ctx.restore();
+
+		ctx.drawImage(waIcon, iconX, iconY, iconPx, iconPx);
+
+		return canvas;
+	};
+
+	// Descarga directa de la imagen PNG (sin abrir nueva pestaña, sin rotar)
+	const downloadImage = async () => {
 		try {
-			const [baseImage, qrImage] = await Promise.all([
-				loadImage(config.image),
-				loadImage(qrDataUrl),
-			]);
+			const canvas = await buildCanvas();
+			const a = document.createElement('a');
+			a.href     = canvas.toDataURL('image/png');
+			a.download = `${config.slug}.png`;
+			a.click();
+		} catch (err) {
+			console.error('Image export failed:', err);
+		}
+	};
 
-			const canvas = document.createElement('canvas');
-			canvas.width = baseImage.naturalWidth;
-			canvas.height = baseImage.naturalHeight;
-			const ctx = canvas.getContext('2d');
-			if (!ctx) return;
+	// Abre ventana de impresión para guardar como PDF.
+	// La imagen horizontal se rota 90° con CSS para llenar la página portrait.
+	const downloadPdf = async () => {
+		try {
+			const canvas = await buildCanvas();
+			const isHorizontal = config.orientation === 'horizontal';
+			const dataUrl = canvas.toDataURL('image/png');
 
-			ctx.drawImage(baseImage, 0, 0, canvas.width, canvas.height);
+			const win = window.open('about:blank', '_blank');
+			if (!win) return; // popup bloqueado — el usuario puede usar Descargar Imagen
 
-			const frameRect = imageFrame.getBoundingClientRect();
-			const qrRect = svg.getBoundingClientRect();
-			const qrCardRect = qrCard.getBoundingClientRect();
-			const qrCardStyles = window.getComputedStyle(qrCard);
-			const qrScaleX = canvas.width / frameRect.width;
-			const qrScaleY = canvas.height / frameRect.height;
-			const cardScale = (qrScaleX + qrScaleY) / 2;
+			const imgStyle = isHorizontal
+				? `position:fixed;top:50%;left:50%;width:100vh;height:100vw;transform:translate(-50%,-50%) rotate(90deg);object-fit:fill;`
+				: `display:block;width:100vw;height:100vh;object-fit:fill;`;
 
-			const cardX = (qrCardRect.left - frameRect.left) * qrScaleX;
-			const cardY = (qrCardRect.top - frameRect.top) * qrScaleY;
-			const cardWidth = qrCardRect.width * qrScaleX;
-			const cardHeight = qrCardRect.height * qrScaleY;
-
-			const qrX = (qrRect.left - frameRect.left) * qrScaleX;
-			const qrY = (qrRect.top - frameRect.top) * qrScaleY;
-			const qrWidth = qrRect.width * qrScaleX;
-			const qrHeight = qrRect.height * qrScaleY;
-
-			const radius = readPx(qrCardStyles.borderTopLeftRadius, 16) * cardScale;
-			const borderWidth =
-				readPx(qrCardStyles.borderTopWidth, 1) * cardScale;
-			const shadow = parseBoxShadow(qrCardStyles.boxShadow);
-
-			ctx.save();
-			if (shadow) {
-				ctx.shadowColor = shadow.color;
-				ctx.shadowBlur = shadow.blur * cardScale;
-				ctx.shadowOffsetX = shadow.offsetX * qrScaleX;
-				ctx.shadowOffsetY = shadow.offsetY * qrScaleY;
-			}
-			drawRoundedRect(ctx, cardX, cardY, cardWidth, cardHeight, radius);
-			ctx.fillStyle = qrCardStyles.backgroundColor || '#fffdf8';
-			ctx.fill();
-			ctx.restore();
-
-			ctx.save();
-			drawRoundedRect(ctx, cardX, cardY, cardWidth, cardHeight, radius);
-			ctx.strokeStyle = qrCardStyles.borderTopColor || '#d4b36b';
-			ctx.lineWidth = borderWidth;
-			ctx.stroke();
-			ctx.restore();
-
-			ctx.drawImage(qrImage, qrX, qrY, qrWidth, qrHeight);
-
-			const link = document.createElement('a');
-			link.href = canvas.toDataURL('image/png');
-			link.download = `${config.slug}-merged.png`;
-			link.click();
-		} catch (error) {
-			console.error('Could not export merged banner image', error);
+			win.document.open();
+			win.document.write(`<!DOCTYPE html>
+<html>
+<head>
+<title>${config.slug}</title>
+<style>
+  @page { size: portrait; margin: 0; }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { overflow: hidden; }
+  img { ${imgStyle} }
+</style>
+</head>
+<body>
+<img src="${dataUrl}" alt="${config.slug}">
+<script>
+window.addEventListener('load', function () {
+  setTimeout(function () { window.print(); }, 250);
+});
+<\/script>
+</body>
+</html>`);
+			win.document.close();
+		} catch (err) {
+			console.error('PDF export failed:', err);
 		}
 	};
 
@@ -176,14 +241,24 @@ export default function BannerAssetPreview({
 								<span>{config.route}</span>
 								<span>{`QR: left ${config.qr.left}% · top ${config.qr.top}% · width ${config.qr.width}%`}</span>
 							</div>
-							<button
-								type="button"
-								onClick={downloadMergedPng}
-								className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/16"
-							>
-								<Download size={16} />
-								Download Merged PNG
-							</button>
+							<div className="flex flex-wrap items-center justify-center gap-2">
+								<button
+									type="button"
+									onClick={downloadImage}
+									className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white/16"
+								>
+									<FileDown size={16} />
+									Descargar imagen
+								</button>
+								<button
+									type="button"
+									onClick={downloadPdf}
+									className="inline-flex items-center gap-2 rounded-full border border-[#f3c863]/40 bg-[#f3c863]/10 px-5 py-2.5 text-sm font-semibold text-[#f7d98a] transition-colors hover:bg-[#f3c863]/20"
+								>
+									<FileDown size={16} />
+									Descargar PDF
+								</button>
+							</div>
 						</div>
 					)}
 

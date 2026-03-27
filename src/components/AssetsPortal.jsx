@@ -1,13 +1,40 @@
 /**
  * Méndez Transport — Portal de Assets del Cliente
- * Ruta: /mis-assets
- * Contraseña hardcoded — sólo para entregar al cliente una vez que pague.
+ * skipAuth=true → acceso directo sin contraseña (ruta raíz)
+ * skipAuth=false (default) → protegido con contraseña (ruta /mis-assets)
  */
 
 import { useState } from 'react';
-import { Lock, Download, Eye, AlertTriangle, CheckCircle, Image, FileImage, X, LogOut, Layers } from 'lucide-react';
+import { Lock, Download, Eye, AlertTriangle, CheckCircle, FileImage, X, LogOut, Layers } from 'lucide-react';
 import BannerAssetPreview from './BannerAssetPreview';
 import { bannerConfigs } from './bannerConfigs';
+
+// ─── Descarga con fondo blanco explícito para imágenes que lo necesitan ─────
+// Las imágenes AI tienen bordes irregulares — poner blanco sólido detrás
+// garantiza que se vean limpias sin importar dónde se usen.
+async function downloadWithWhiteBackground(asset) {
+  try {
+    const img = new Image();
+    img.src = asset.file;
+    await new Promise((res, rej) => { img.onload = res; img.onerror = rej; });
+    const canvas = document.createElement('canvas');
+    canvas.width  = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(img, 0, 0);
+    const a = document.createElement('a');
+    a.href     = canvas.toDataURL('image/png');
+    a.download = img.src.split('/').pop().replace(/\.\w+$/, '') + '.png';
+    a.click();
+  } catch {
+    const a = document.createElement('a');
+    a.href = asset.file;
+    a.download = asset.file.split('/').pop();
+    a.click();
+  }
+}
 
 // ─── Contraseña hardcoded ───────────────────────────────────────────────────
 const ACCESS_PASSWORD = 'mendez507';
@@ -99,26 +126,40 @@ const ASSET_GROUPS = [
 // ─── Componente de asset card ────────────────────────────────────────────────
 function AssetCard({ asset }) {
   const [preview, setPreview] = useState(false);
+  const [processing, setProcessing] = useState(false);
 
   const filename = asset.file.split('/').pop();
+
+  const handleDownload = async () => {
+    if (asset.whiteBackground) {
+      // Imágenes AI con fondos blancos irregulares → renderizar sobre blanco
+      // limpio para ocultar bordes feos antes de descargar
+      setProcessing(true);
+      await downloadWithWhiteBackground(asset);
+      setProcessing(false);
+    } else {
+      // Imágenes con transparencia real → descargar tal cual
+      const a = document.createElement('a');
+      a.href = asset.file;
+      a.download = filename;
+      a.click();
+    }
+  };
+
+  // thumbBg del asset: blanco para logos fondo blanco, oscuro para los demás
+  const thumbBg = asset.whiteBackground ? 'bg-white' : 'bg-gray-800';
+  const modalBg = asset.whiteBackground ? 'bg-white' : 'bg-[#1a1a2e]';
 
   return (
     <>
       <div className="group relative flex flex-col rounded-2xl border border-white/10 bg-white/5 overflow-hidden transition-all duration-300 hover:border-brand-red/30 hover:bg-white/8 hover:shadow-xl">
         {/* Thumbnail */}
-        <div className={`relative h-40 ${asset.thumbBg} flex items-center justify-center overflow-hidden`}>
+        <div className={`relative h-40 ${thumbBg} flex items-center justify-center overflow-hidden`}>
           <img
             src={asset.thumb}
             alt={asset.name}
             className="max-h-full max-w-full object-contain p-3 transition-transform duration-300 group-hover:scale-105"
           />
-          {/* White background warning */}
-          {asset.whiteBackground && (
-            <div className="absolute top-2 right-2 flex items-center gap-1 rounded-full bg-amber-500/90 px-2 py-0.5 text-xs font-bold text-white">
-              <AlertTriangle size={10} />
-              Fondo blanco
-            </div>
-          )}
           {/* Preview button */}
           <button
             onClick={() => setPreview(true)}
@@ -136,23 +177,15 @@ function AssetCard({ asset }) {
           <p className="font-bold text-white text-sm leading-tight">{asset.name}</p>
           <p className="mt-1 text-xs text-gray-400 leading-relaxed flex-1">{asset.desc}</p>
 
-          {asset.whiteBackground && (
-            <div className="mt-2 flex items-start gap-1.5 rounded-lg bg-amber-500/10 border border-amber-500/20 px-2.5 py-2">
-              <AlertTriangle size={12} className="text-amber-400 mt-0.5 flex-shrink-0" />
-              <p className="text-xs text-amber-300">
-                Este archivo tiene <strong>fondo blanco</strong>. No usar sobre fondos claros.
-              </p>
-            </div>
-          )}
-
-          <a
-            href={asset.file}
-            download={filename}
-            className="mt-3 flex items-center justify-center gap-2 rounded-xl bg-brand-red hover:bg-brand-red-dark text-white text-xs font-bold py-2.5 px-4 transition-colors duration-200"
+          <button
+            type="button"
+            onClick={handleDownload}
+            disabled={processing}
+            className="mt-3 flex items-center justify-center gap-2 rounded-xl bg-brand-red hover:bg-brand-red-dark disabled:opacity-60 text-white text-xs font-bold py-2.5 px-4 transition-colors duration-200"
           >
             <Download size={14} />
-            Descargar
-          </a>
+            {processing ? 'Preparando…' : 'Descargar'}
+          </button>
         </div>
       </div>
 
@@ -172,7 +205,7 @@ function AssetCard({ asset }) {
             >
               <X size={16} />
             </button>
-            <div className={`rounded-2xl overflow-hidden ${asset.thumbBg} p-4 shadow-2xl`}>
+            <div className={`rounded-2xl overflow-hidden ${modalBg} p-4 shadow-2xl`}>
               <img
                 src={asset.thumb}
                 alt={asset.name}
@@ -202,7 +235,7 @@ function BannersSection() {
         <div>
           <h2 className="font-bold text-white text-lg">Banners & Tarjeta (con QR)</h2>
           <p className="text-xs text-gray-500">
-            Vista exacta del diseño final — usa el botón <strong className="text-white">Download Merged PNG</strong> para descargar con el QR incluido.
+            Vista exacta del diseño final — usa el botón <strong className="text-white">Descargar PDF listo para imprimir</strong> para descargar con el QR incluido.
           </p>
         </div>
       </div>
@@ -351,13 +384,15 @@ function AssetsView({ onLogout }) {
               <CheckCircle size={12} className="text-green-400" />
               <span className="text-xs font-semibold text-green-400">Acceso activo</span>
             </div>
-            <button
-              onClick={onLogout}
-              className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-gray-400 hover:text-white transition-colors"
-            >
-              <LogOut size={12} />
-              Salir
-            </button>
+            {onLogout && (
+              <button
+                onClick={onLogout}
+                className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-gray-400 hover:text-white transition-colors"
+              >
+                <LogOut size={12} />
+                Salir
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -410,12 +445,13 @@ function AssetsView({ onLogout }) {
 }
 
 // ─── Main component ───────────────────────────────────────────────────────────
-export default function AssetsPortal() {
-  const [authenticated, setAuthenticated] = useState(false);
+// skipAuth=true → acceso directo sin login (usado en ruta raíz)
+export default function AssetsPortal({ skipAuth = false }) {
+  const [authenticated, setAuthenticated] = useState(skipAuth);
 
   if (!authenticated) {
     return <LoginScreen onLogin={() => setAuthenticated(true)} />;
   }
 
-  return <AssetsView onLogout={() => setAuthenticated(false)} />;
+  return <AssetsView onLogout={skipAuth ? undefined : () => setAuthenticated(false)} />;
 }

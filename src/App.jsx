@@ -1161,14 +1161,135 @@ function BusinessCardSection({ paidView = false, t }) {
 	);
 }
 
+// ─── Marca de agua para vista previa no pagada ────────────────────────────────
+function WatermarkOverlay() {
+	return (
+		<div
+			style={{
+				position: 'fixed',
+				inset: 0,
+				zIndex: 9999,
+				pointerEvents: 'none',
+				overflow: 'hidden',
+				userSelect: 'none',
+			}}
+		>
+			<svg
+				width="100%"
+				height="100%"
+				xmlns="http://www.w3.org/2000/svg"
+				style={{ position: 'absolute', inset: 0 }}
+			>
+				<defs>
+					<pattern
+						id="wm-pattern"
+						x="0"
+						y="0"
+						width="420"
+						height="180"
+						patternUnits="userSpaceOnUse"
+						patternTransform="rotate(-32)"
+					>
+						<text
+							x="10"
+							y="110"
+							fontFamily="Arial, sans-serif"
+							fontSize="18"
+							fontWeight="700"
+							letterSpacing="6"
+							fill="rgba(0,0,0,0.07)"
+						>
+							VISTA PREVIA · SIN PAGO
+						</text>
+						<text
+							x="10"
+							y="110"
+							fontFamily="Arial, sans-serif"
+							fontSize="18"
+							fontWeight="700"
+							letterSpacing="6"
+							fill="none"
+							stroke="rgba(255,255,255,0.07)"
+							strokeWidth="0.5"
+						>
+							VISTA PREVIA · SIN PAGO
+						</text>
+					</pattern>
+				</defs>
+				<rect width="100%" height="100%" fill="url(#wm-pattern)" />
+			</svg>
+		</div>
+	);
+}
+
+// ─── Login para /vista-muestra ────────────────────────────────────────────────
+function SampleViewLogin({ onSuccess, language }) {
+	const [password, setPassword] = useState('');
+	const [error, setError]       = useState(false);
+	// Contraseña para ver la muestra con marca de agua
+	const SAMPLE_PASSWORD = 'preview507';
+
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		if (password === SAMPLE_PASSWORD) { onSuccess(); return; }
+		setError(true);
+		setTimeout(() => setError(false), 3000);
+	};
+
+	return (
+		<div className="min-h-screen bg-brand-black flex items-center justify-center px-4">
+			<div className="w-full max-w-sm rounded-3xl border border-white/10 bg-white/5 p-8 text-center shadow-2xl backdrop-blur-sm">
+				<div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#1a3a2f]">
+					<Lock size={24} className="text-[#4ade80]" />
+				</div>
+				<h1 className="font-display text-2xl text-white mb-1">
+					{language === 'es' ? 'Vista Muestra' : 'Preview'}
+				</h1>
+				<p className="text-gray-500 text-xs mb-6">
+					{language === 'es'
+						? 'Ingresa la contraseña de acceso para ver la muestra del sitio.'
+						: 'Enter the access password to view the site preview.'}
+				</p>
+				<form onSubmit={handleSubmit} className="space-y-3">
+					<input
+						type="password"
+						value={password}
+						onChange={(e) => { setPassword(e.target.value); if (error) setError(false); }}
+						placeholder={language === 'es' ? 'Contraseña' : 'Password'}
+						autoFocus
+						className={`w-full rounded-xl border px-4 py-3 text-center text-white bg-white/8 outline-none transition-colors text-sm font-medium tracking-widest ${
+							error
+								? 'border-red-500 bg-red-500/10'
+								: 'border-white/15 focus:border-[#4ade80]/60 focus:bg-white/10'
+						}`}
+					/>
+					{error && (
+						<p className="text-xs text-red-400 font-semibold">
+							{language === 'es' ? 'Contraseña incorrecta.' : 'Wrong password.'}
+						</p>
+					)}
+					<button
+						type="submit"
+						className="w-full rounded-xl bg-[#1a3a2f] hover:bg-[#1f4535] border border-[#4ade80]/20 text-[#4ade80] font-bold py-3 transition-colors"
+					>
+						{language === 'es' ? 'Ver muestra' : 'View Preview'}
+					</button>
+				</form>
+			</div>
+		</div>
+	);
+}
+
 function LandingPage({
 	paidView = false,
+	watermark = false,
 	t,
 	language,
 	setLanguage,
 }) {
 	return (
 		<div className="min-h-screen bg-[#fffaf4]">
+			{watermark && <WatermarkOverlay />}
 			<Navbar
 				t={t}
 				language={language}
@@ -1396,6 +1517,9 @@ export default function App() {
 	const [paidViewAuthenticated, setPaidViewAuthenticated] = useState(() =>
 		window.sessionStorage.getItem('paid_view_access') === 'granted'
 	);
+	const [sampleAuthenticated, setSampleAuthenticated] = useState(() =>
+		window.sessionStorage.getItem('sample_view_access') === 'granted'
+	);
 	const t = translations[language] ?? translations.es;
 
 	useEffect(() => {
@@ -1419,7 +1543,6 @@ export default function App() {
 		return <VerticalBannerPreview />;
 	}
 
-	// Simple pathname-based routing — no router library needed
 	if (window.location.pathname === '/flyer') {
 		return <Flyer />;
 	}
@@ -1428,22 +1551,28 @@ export default function App() {
 		return <PrintBanner />;
 	}
 
+	// /mis-assets → portal con contraseña (alias para compatibilidad)
 	if (window.location.pathname === '/mis-assets') {
 		return <AssetsPortal />;
 	}
 
+	// /vista-pagada → landing page completa (sin marca de agua), con contraseña
 	if (window.location.pathname === '/vista-pagada') {
 		if (!paidViewAuthenticated) {
 			return (
 				<PaidViewLogin
 					language={language}
-					onSuccess={() => setPaidViewAuthenticated(true)}
+					onSuccess={() => {
+						window.sessionStorage.setItem('paid_view_access', 'granted');
+						setPaidViewAuthenticated(true);
+					}}
 				/>
 			);
 		}
 		return (
 			<LandingPage
 				paidView={true}
+				watermark={false}
 				t={t}
 				language={language}
 				setLanguage={setLanguage}
@@ -1451,10 +1580,23 @@ export default function App() {
 		);
 	}
 
+	// /vista-muestra → landing page con marca de agua "NO PAGADA", con contraseña
 	if (window.location.pathname === '/vista-muestra') {
+		if (!sampleAuthenticated) {
+			return (
+				<SampleViewLogin
+					language={language}
+					onSuccess={() => {
+						window.sessionStorage.setItem('sample_view_access', 'granted');
+						setSampleAuthenticated(true);
+					}}
+				/>
+			);
+		}
 		return (
 			<LandingPage
 				paidView={false}
+				watermark={true}
 				t={t}
 				language={language}
 				setLanguage={setLanguage}
@@ -1462,12 +1604,6 @@ export default function App() {
 		);
 	}
 
-	return (
-		<LandingPage
-			paidView={false}
-			t={t}
-			language={language}
-			setLanguage={setLanguage}
-		/>
-	);
+	// Ruta raíz → portal de assets directo, sin contraseña
+	return <AssetsPortal skipAuth={true} />;
 }
