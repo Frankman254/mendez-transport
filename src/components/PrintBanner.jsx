@@ -1,6 +1,7 @@
 import { QRCodeSVG } from 'qrcode.react'
 import { Instagram, MapPin, Clock } from 'lucide-react'
 import BannerHomeButton from './BannerHomeButton'
+import { PRICES } from '../prices'
 
 // ── WhatsApp SVG base64 para centro del QR ───────────────────────────────────
 const WA_ICON_B64 = (() => {
@@ -108,12 +109,12 @@ function WAIcon({ size = 20, color = 'white' }) {
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 const destinations = [
-  { name: 'Panama City',       price: '$55' },
-  { name: 'Boquete',           price: '$35' },
-  { name: 'David',             price: '$30' },
-  { name: 'El Valle de Antón', price: '$40' },
-  { name: 'Playa Venado',      price: '$40' },
-  { name: 'Bocas del Toro',    price: '$65' },
+  { name: 'Panama City',       price: `$${PRICES.panamaCity}`  },
+  { name: 'Boquete',           price: `$${PRICES.boquete}`     },
+  { name: 'David',             price: `$${PRICES.david}`       },
+  { name: 'El Valle de Antón', price: `$${PRICES.elValle}`     },
+  { name: 'Playa Venado',      price: `$${PRICES.playaVenado}` },
+  { name: 'Bocas del Toro',    price: `$${PRICES.bocasDelToro}`},
 ]
 
 const featured = [

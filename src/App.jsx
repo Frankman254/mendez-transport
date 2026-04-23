@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect } from 'react';
+import { PRICES } from './prices';
 import { motion, useInView, AnimatePresence } from 'framer-motion';
 import { QRCodeSVG } from 'qrcode.react';
 import {
@@ -451,21 +452,21 @@ function FeaturedDestinations({ t, theme }) {
 		{
 			name: t.destinations.items[0].name,
 			tagline: t.destinations.items[0].tagline,
-			price: '$65',
+			price: `$${PRICES.bocasDelToro}`,
 			image: '/assets/Bocas-del-toro-1.jpg',
 			badge: t.destinations.items[0].badge,
 		},
 		{
 			name: t.destinations.items[1].name,
 			tagline: t.destinations.items[1].tagline,
-			price: '$40',
+			price: `$${PRICES.elValle}`,
 			image: '/assets/tips-valle-de-anton-panama.jpg',
 			badge: t.destinations.items[1].badge,
 		},
 		{
 			name: t.destinations.items[2].name,
 			tagline: t.destinations.items[2].tagline,
-			price: '$55',
+			price: `$${PRICES.panamaCity}`,
 			image: '/assets/Panama-City.jpg',
 			badge: t.destinations.items[2].badge,
 		},
@@ -531,12 +532,12 @@ function FeaturedDestinations({ t, theme }) {
 // ─── PRICES / ALL DESTINATIONS ────────────────────────────────────────────────
 function PricesSection({ t }) {
 	const destinations = [
-		{ name: t.destinations.items[2].name, price: 55, icon: '🏙️', popular: false },
-		{ name: 'Boquete', price: 35, icon: '⛰️', popular: true },
-		{ name: 'David', price: 30, icon: '🏘️', popular: false },
-		{ name: t.destinations.items[1].name, price: 40, icon: '🌋', popular: false },
-		{ name: 'Playa Venado', price: 40, icon: '🏖️', popular: false },
-		{ name: t.destinations.items[0].name, price: 65, icon: '🏝️', popular: true },
+		{ name: t.destinations.items[2].name, price: PRICES.panamaCity,  icon: '🏙️', popular: false },
+		{ name: 'Boquete',                    price: PRICES.boquete,     icon: '⛰️', popular: true  },
+		{ name: 'David',                      price: PRICES.david,       icon: '🏘️', popular: false },
+		{ name: t.destinations.items[1].name, price: PRICES.elValle,     icon: '🌋', popular: false },
+		{ name: 'Playa Venado',               price: PRICES.playaVenado, icon: '🏖️', popular: false },
+		{ name: t.destinations.items[0].name, price: PRICES.bocasDelToro,icon: '🏝️', popular: true  },
 	];
 
 	return (

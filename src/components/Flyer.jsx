@@ -8,6 +8,7 @@
 import { QRCodeSVG } from 'qrcode.react'
 import { MapPin, Clock, Phone } from 'lucide-react'
 import BannerHomeButton from './BannerHomeButton'
+import { PRICES } from '../prices'
 
 // ── WhatsApp icon SVG ─────────────────────────────────────────────────────────
 function WhatsAppIcon({ size = 20, color = 'currentColor' }) {
@@ -104,12 +105,12 @@ function WhatsAppQR({ url = 'https://wa.me/50769255088', size = 100 }) {
 
 // ── Destinations & Prices data ────────────────────────────────────────────────
 const DESTINATIONS = [
-  { name: 'Panama City',      price: '$55' },
-  { name: 'Boquete',          price: '$35' },
-  { name: 'David',            price: '$30' },
-  { name: 'El Valle de Antón',price: '$40' },
-  { name: 'Playa Venado',     price: '$40' },
-  { name: 'Bocas del Toro',   price: '$65' },
+  { name: 'Panama City',       price: `$${PRICES.panamaCity}`  },
+  { name: 'Boquete',           price: `$${PRICES.boquete}`     },
+  { name: 'David',             price: `$${PRICES.david}`       },
+  { name: 'El Valle de Antón', price: `$${PRICES.elValle}`     },
+  { name: 'Playa Venado',      price: `$${PRICES.playaVenado}` },
+  { name: 'Bocas del Toro',    price: `$${PRICES.bocasDelToro}`},
 ]
 
 // ── Featured destinations (3 images, NO prices) ───────────────────────────────
