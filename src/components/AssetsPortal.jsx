@@ -5,9 +5,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { Lock, Download, Eye, AlertTriangle, CheckCircle, FileImage, X, LogOut, Layers, Sun, Moon } from 'lucide-react';
-import BannerAssetPreview from './BannerAssetPreview';
-import { bannerConfigs } from './bannerConfigs';
+import { Lock, Download, Eye, AlertTriangle, CheckCircle, FileImage, X, LogOut, Sun, Moon } from 'lucide-react';
 
 // ─── Descarga con fondo blanco explícito para imágenes que lo necesitan ─────
 // Las imágenes AI tienen bordes irregulares — poner blanco sólido detrás
@@ -220,56 +218,6 @@ function AssetCard({ asset }) {
   );
 }
 
-// ─── Banners section (idéntico a /banners, con QR overlay) ──────────────────
-function BannersSection() {
-  const [activeSlug, setActiveSlug] = useState(bannerConfigs[0].slug);
-  const activeConfig = bannerConfigs.find(c => c.slug === activeSlug) ?? bannerConfigs[0];
-
-  return (
-    <section className="mb-12">
-      {/* Section header */}
-      <div className="flex items-center gap-3 mb-5">
-        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 text-white">
-          <Layers size={20} />
-        </div>
-        <div>
-          <h2 className="font-bold text-white text-lg">Banners & Tarjeta (con QR)</h2>
-          <p className="text-xs text-gray-500">
-            Aquí están tus diseños finales listos para imprimir o compartir. Descarga cada uno en imagen o en PDF listo para imprimir.
-          </p>
-        </div>
-      </div>
-
-      {/* Tabs */}
-      <div className="flex flex-wrap gap-2 mb-4">
-        {bannerConfigs.map(config => (
-          <button
-            key={config.slug}
-            type="button"
-            onClick={() => setActiveSlug(config.slug)}
-            className={`rounded-full border px-4 py-2 text-sm font-semibold transition-colors ${
-              activeConfig.slug === config.slug
-                ? 'border-[#f3c863] bg-[#f3c863]/15 text-[#f7d98a]'
-                : 'border-white/10 bg-white/5 text-white/75 hover:bg-white/10'
-            }`}
-          >
-            {config.title}
-          </button>
-        ))}
-      </div>
-
-      {/* Banner preview — same as /banners page */}
-      <div className="rounded-[2rem] overflow-hidden border border-white/10">
-        <BannerAssetPreview
-          config={activeConfig}
-          embedded={true}
-          showHeader={true}
-        />
-      </div>
-    </section>
-  );
-}
-
 // ─── Login screen ────────────────────────────────────────────────────────────
 function LoginScreen({ onLogin }) {
   const [input, setInput] = useState('');
@@ -309,7 +257,7 @@ function LoginScreen({ onLogin }) {
           <h1 className="font-display text-3xl text-white mb-1">Portal de Assets</h1>
           <p className="text-gray-400 text-sm mb-2">Méndez Transport</p>
           <p className="text-gray-500 text-xs mb-8">
-            Ingresa la contraseña para acceder a tus logos y banners.
+            Ingresa la contraseña para acceder a tus logos y diseños.
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -487,13 +435,10 @@ function AssetsView({ onLogout }) {
         <div className="mb-10 rounded-2xl border border-brand-red/20 bg-brand-red/5 p-6">
           <h2 className="text-white font-bold text-lg mb-1">Tus archivos listos para descargar</h2>
           <p className="text-gray-400 text-sm">
-            Aquí encontrarás todos los logos, banners y diseños creados para Méndez Transport.
+            Aquí encontrarás todos los logos y diseños creados para Méndez Transport.
             Pulsa <strong className="text-white">Descargar</strong> en cualquier archivo para guardarlo en alta calidad.
           </p>
         </div>
-
-        {/* Banners con QR — idéntico a /banners */}
-        <BannersSection />
 
         {/* Logos & otros archivos */}
         {ASSET_GROUPS.map((group) => (

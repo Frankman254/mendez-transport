@@ -28,15 +28,10 @@ import {
 	Sun,
 	Moon,
 } from 'lucide-react';
-import Flyer from './components/Flyer';
-import PrintBanner from './components/PrintBanner';
-import ShuttleBanner, { PRIVATE_CARD_IMAGE } from './components/ShuttleBanner';
-import VerticalBannerPreview from './components/VerticalBannerPreview';
-import BannerAssetPreview from './components/BannerAssetPreview';
-import BannersTabbedPage from './components/BannersTabbedPage';
 import AssetsPortal from './components/AssetsPortal';
-import { bannerConfigByRoute, bannerConfigs } from './components/bannerConfigs';
 import { translations } from './translations';
+
+const PRIVATE_CARD_IMAGE = '/assets/mis-assets/Tarjeta_4k.png';
 
 // ─── Logo SVG Component ─────────────────────────────────────────────────────
 function MendezLogo({ size = 48, showText = true, dark = false }) {
@@ -1681,14 +1676,6 @@ export default function App() {
 		document.documentElement.classList.toggle('dark', darkMode);
 		window.localStorage.setItem('theme', darkMode ? 'dark' : 'light');
 	}, [darkMode]);
-
-	const bannerPreview = bannerConfigByRoute[window.location.pathname];
-	if (bannerPreview) {
-		return <BannerAssetPreview config={bannerPreview} />;
-	}
-
-
-
 
 
 
