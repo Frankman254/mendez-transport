@@ -29,6 +29,50 @@ export const translations = {
       paidBadge: 'Premium access',
       paidDesc:
         'This view keeps the same polished visual language as the public site while showcasing the client-only materials in a more curated composition.',
+      dailyDeparture: 'Daily departure · 7:40 AM',
+      cardLocation: 'Panama · Caribbean & Pacific',
+      travelerLove: 'Traveler favorite',
+      scroll: 'Scroll',
+      stats: {
+        travelers: 'Happy travelers',
+        routes: 'Routes covered',
+        rating: 'Average rating',
+      },
+    },
+    testimonials: {
+      tag: 'Travelers love it',
+      title: 'STORIES FROM THE ROAD',
+      subtitle: 'Real travelers, real journeys across Panama with Méndez Transport.',
+      items: [
+        {
+          name: 'Sarah & Tom',
+          country: 'Canada',
+          emoji: '🇨🇦',
+          quote: 'Smooth pickup right at our hostel and the driver was super friendly. Bocas del Toro felt closer than we expected!',
+        },
+        {
+          name: 'Lukas',
+          country: 'Germany',
+          emoji: '🇩🇪',
+          quote: 'Easy WhatsApp booking and a comfortable ride to Boquete. Highly recommended for backpackers.',
+        },
+        {
+          name: 'María & Joaquín',
+          country: 'Spain',
+          emoji: '🇪🇸',
+          quote: 'Reservamos un privado al Valle de Antón y todo perfecto. Puntuales y muy amables.',
+        },
+        {
+          name: 'Aiko',
+          country: 'Japan',
+          emoji: '🇯🇵',
+          quote: 'They explained every detail in English. The van was clean and the views during the trip were unforgettable.',
+        },
+      ],
+    },
+    float: {
+      tooltip: 'Chat with us on WhatsApp',
+      cta: 'Book on WhatsApp',
     },
     benefits: {
       tag: 'Why Choose Us',
@@ -208,6 +252,50 @@ export const translations = {
       paidBadge: 'Acceso premium',
       paidDesc:
         'Esta vista conserva el mismo lenguaje visual cuidado de la web pública, pero presenta los materiales exclusivos del cliente en una composición más curada.',
+      dailyDeparture: 'Salida diaria · 7:40 AM',
+      cardLocation: 'Panamá · Caribe y Pacífico',
+      travelerLove: 'Favorito del viajero',
+      scroll: 'Desliza',
+      stats: {
+        travelers: 'Viajeros felices',
+        routes: 'Rutas cubiertas',
+        rating: 'Calificación promedio',
+      },
+    },
+    testimonials: {
+      tag: 'A los viajeros les encanta',
+      title: 'HISTORIAS EN LA CARRETERA',
+      subtitle: 'Viajeros reales, recorridos reales por Panamá con Méndez Transport.',
+      items: [
+        {
+          name: 'Sarah & Tom',
+          country: 'Canadá',
+          emoji: '🇨🇦',
+          quote: 'Nos recogieron justo en el hostel y el conductor fue super amable. ¡Bocas del Toro se sintió más cerca de lo que esperábamos!',
+        },
+        {
+          name: 'Lukas',
+          country: 'Alemania',
+          emoji: '🇩🇪',
+          quote: 'Reserva fácil por WhatsApp y traslado cómodo a Boquete. Muy recomendado para mochileros.',
+        },
+        {
+          name: 'María & Joaquín',
+          country: 'España',
+          emoji: '🇪🇸',
+          quote: 'Reservamos un privado al Valle de Antón y todo perfecto. Puntuales y muy amables.',
+        },
+        {
+          name: 'Aiko',
+          country: 'Japón',
+          emoji: '🇯🇵',
+          quote: 'Nos explicaron cada detalle en inglés. La van estaba impecable y las vistas durante el viaje fueron inolvidables.',
+        },
+      ],
+    },
+    float: {
+      tooltip: 'Chatea con nosotros por WhatsApp',
+      cta: 'Reservar por WhatsApp',
     },
     benefits: {
       tag: 'Por qué elegirnos',
